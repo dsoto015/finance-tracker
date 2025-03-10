@@ -1,2 +1,15 @@
-<p>setup works!</p>
-<mat-slide-toggle>Toggle me!</mat-slide-toggle>
+<mat-card class="container">
+  <h2>Savings</h2>
+
+  <mat-form-field class="example-form-field">
+    <mat-label>Enter starting amount</mat-label>
+    <input matInput type="text" [(ngModel)]="userInput">
+
+    <button *ngIf="userInput" matSuffix mat-icon-button (click)="userInput=''">
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </mat-form-field>
+
+  <p>You entered: <strong>{{ userInput }}</strong></p>
+</mat-card>
