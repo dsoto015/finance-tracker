@@ -1,9 +1,9 @@
-<mat-card class="container">
+  <mat-card class="container">
   <h2>Savings</h2>
 
   <mat-form-field class="example-form-field">
     <mat-label>Enter starting amount</mat-label>
-    <input matInput type="text" [(ngModel)]="userInput">
+    <input matInput type="text" [(ngModel)]="userInput" >
 
     <button *ngIf="userInput" matSuffix mat-icon-button (click)="userInput=''">
       <mat-icon>close</mat-icon>

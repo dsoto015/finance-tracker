@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SetupComponent } from './setup/setup.component';
-import { SetupModule } from './setup/setup.module';
+import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarModule } from './navbar/navbar.module';
+import { SetupModule } from './navbar/setup/setup.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import { SetupModule } from './setup/setup.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SetupModule
+    NavbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

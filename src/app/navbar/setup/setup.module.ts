@@ -20,7 +20,8 @@ import { SetupComponent } from './setup.component';
     MatInputModule,
     MatCardModule,
     MatFormFieldModule,
-    MatButtonModule, MatIconModule,
+    MatButtonModule,
+    MatIconModule,
     FormsModule 
   ],
   exports: [SetupComponent]
