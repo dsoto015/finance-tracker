@@ -1,0 +1,8 @@
+mat-sidenav {
+  width: 200px;
+}
+
+mat-sidenav-content {
+  display: contents;
+  height: 1000px;
+}
