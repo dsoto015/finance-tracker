@@ -3,6 +3,10 @@ mat-sidenav {
 }
 
 mat-sidenav-content {
-  display: contents;
-  height: 1000px;
+  display: flex;
+}
+
+mat-sidenav-container {
+  height: 93vh;
+  
 }
