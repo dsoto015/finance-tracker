@@ -1,3 +1,13 @@
-.mat-table {
-    padding: 50px;
+.table {
+  padding: 10px;
+
+  .row-contents {
+    padding: 10px;
+    align-items: center;
+    display: flex;
+  }
+
+  .clear-category {
+      margin: 0px 5px 0px 0px
+  }
 }

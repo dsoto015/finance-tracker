@@ -27,7 +27,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'app-expenses',
   standalone: false,
   templateUrl: './expenses.component.html',
-  styleUrl: './expenses.component.css'
+  styleUrl: './expenses.component.scss'
 })
 export class ExpensesComponent {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -43,6 +43,16 @@ export class ExpensesComponent {
 
   removeData() {
     this.dataToDisplay = this.dataToDisplay.slice(0, -1);
+    this.dataSource.setData(this.dataToDisplay);
+  }
+
+  onRowClicked(row: any) {
+    console.log("row", row);
+    var index = this.dataToDisplay.indexOf(row);
+    console.log("index:", index);
+    if (index > -1) {
+      this.dataToDisplay.splice(index, 1)
+    }
     this.dataSource.setData(this.dataToDisplay);
   }
 }
