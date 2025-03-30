@@ -1,0 +1,20 @@
+<div class="mat-table">
+  <mat-table [dataSource]="dataSource">
+    <!-- User name Definition -->
+    <ng-container matColumnDef="username">
+      <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.username}} </mat-cell>
+    </ng-container>
+
+    <!-- Age Definition -->
+    <ng-container matColumnDef="age">
+      <mat-header-cell *matHeaderCellDef> Expense </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.age}} </mat-cell>
+    </ng-container>
+
+
+    <!-- Header and Row Declarations -->
+    <mat-header-row *matHeaderRowDef="['username', 'age']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['username', 'age']"></mat-row>
+  </mat-table>
+</div>

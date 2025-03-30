@@ -3,13 +3,14 @@
 
   <mat-form-field class="example-form-field">
     <mat-label>Enter starting amount</mat-label>
-    <input matInput type="text" [(ngModel)]="userInput" >
+    <input matInput type="text" [(ngModel)]="userInput">
 
     <button *ngIf="userInput" matSuffix mat-icon-button (click)="userInput=''">
       <mat-icon>close</mat-icon>
     </button>
-
   </mat-form-field>
 
-  <p>You entered: <strong>{{ userInput }}</strong></p>
+  <div class="submit">
+    <button mat-raised-button>Submit</button>
+  </div>
 </mat-card>

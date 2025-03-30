@@ -6,21 +6,19 @@
     <h1 class="example-app-name">$oto Finance Tracker</h1>
   </mat-toolbar>
 
-  <mat-sidenav-container (backdropClick)="close('backdrop')" autosize>
-    <mat-sidenav #snav #sidenav mode="over" fixedTopGap="56">
-      <mat-nav-list>
-        <a mat-list-item>Setup</a>
-        <a mat-list-item>Income</a>
-        <a mat-list-item>Expenses</a>
+  <mat-sidenav-container (backdropClick)="close('backdrop')">
+    <mat-sidenav #snav #sidenav mode="push">
+      <mat-nav-list (click)="close('backdrop')">
+        <a mat-list-item routerLink="/setup">Setup</a>
+        <a mat-list-item routerLink="/income">Income</a>
+        <a mat-list-item routerLink="/expenses">Expenses</a>
         <a mat-list-item>Summary</a>
-        <a mat-list-item>test</a>
-        <a mat-list-item>asd</a>
       </mat-nav-list>
     </mat-sidenav>
 
 
     <mat-sidenav-content>
-        <app-setup />
+        <router-outlet/>
     </mat-sidenav-content>
 
   </mat-sidenav-container>

@@ -5,7 +5,7 @@ import { MatSidenav } from '@angular/material/sidenav';
   selector: 'app-navbar',
   standalone: false,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.scss'
 })
 
 

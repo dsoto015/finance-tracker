@@ -7,6 +7,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { SetupModule } from './setup/setup.module';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component';
+import { IncomeModule } from './income/income.module';
+import { RouterModule } from '@angular/router';
+import { ExpensesModule } from './expenses/expenses.module';
 
 
 @NgModule({
@@ -14,6 +17,9 @@ import { NavbarComponent } from './navbar.component';
   imports: [
     CommonModule,
     SetupModule,
+    IncomeModule,
+    ExpensesModule,
+    RouterModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,

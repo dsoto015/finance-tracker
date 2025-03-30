@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-setup',
   standalone: false,
   templateUrl: './setup.component.html',
-  styleUrl: './setup.component.css'
+  styleUrl: './setup.component.scss'
 })
 export class SetupComponent {
   userInput: string = ''; 
