@@ -1,17 +1,23 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron');
 const url = require("url");
 const path = require("path");
+const fs = require('fs');
 
-let mainWindow
+let mainWindow;
+
+// Get a safe path to store the file
+const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
     }
-  })
+  });
 
   mainWindow.loadURL(
     url.format({
@@ -20,20 +26,45 @@ function createWindow() {
       slashes: true
     })
   );
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
 }
 
-app.on('ready', createWindow)
+// ----------------------
+// IPC Handlers for Angular <-> Electron
+// ----------------------
+ipcMain.handle('load-expenses', async () => {
+  try {
+    if (!fs.existsSync(expensesPath)) {
+      fs.writeFileSync(expensesPath, '[]');
+    }
+    const data = fs.readFileSync(expensesPath, 'utf-8');
+    console.log('Saving expenses to:', expensesPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading expenses:', error);
+    return [];
+  }
+});
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
-})
+ipcMain.handle('save-expenses', async (_, data) => {
+  try {
+    fs.writeFileSync(expensesPath, JSON.stringify(data, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving expenses:', error);
+    return { success: false, error };
+  }
+});
 
-app.on('activate', function () {
-  if (mainWindow === null) createWindow()
-})
+app.on('ready', createWindow);
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+app.on('activate', () => {
+  if (mainWindow === null) createWindow();
+});

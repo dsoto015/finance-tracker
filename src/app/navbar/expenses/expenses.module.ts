@@ -6,11 +6,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableModule } from '@angular/material/table';
 
 import { FormsModule } from '@angular/forms';
 
 import { ExpensesComponent } from './expenses.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -24,7 +25,9 @@ import { ExpensesComponent } from './expenses.component';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
+    MatTable,
+    DragDropModule
   ],
   exports: [ExpensesComponent]
 })

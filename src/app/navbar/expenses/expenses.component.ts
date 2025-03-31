@@ -1,77 +1,103 @@
-import { Component } from '@angular/core';
-import { DataSource } from '@angular/cdk/collections';
-import { Observable, ReplaySubject } from 'rxjs';
-
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { Component, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { v4 as uuid } from 'uuid';
+import { FinanceDataService } from '../../../core/services/finance-data-service';
+import { CategoryBlock, SubcategoryRow } from '../../../core/models/expenses.model';
+import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-expenses',
   standalone: false,
   templateUrl: './expenses.component.html',
-  styleUrl: './expenses.component.scss'
+  styleUrls: ['./expenses.component.scss']
 })
 export class ExpensesComponent {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataToDisplay = [...ELEMENT_DATA];
+  @ViewChild('table', { static: true }) table!: MatTable<any>;
 
-  dataSource = new ExampleDataSource(this.dataToDisplay);
+  displayedColumns: string[] = ['actions', 'name', 'value'];
+  categories: {
+    id: string;
+    name: string;
+    rows: MatTableDataSource<SubcategoryRow>
+    }[] = [
+      {
+        id: uuid(),
+        name: 'Housing',
+        rows: new MatTableDataSource<SubcategoryRow>([
+          { id: uuid(), name: 'Rent', value: 1200 },
+          { id: uuid(), name: 'Utilities', value: 150 },
+        ])
+      },
+      {
+        id: uuid(),
+        name: 'Transportation',
+        rows: new MatTableDataSource<SubcategoryRow>([
+          { id: uuid(), name: 'Gas', value: 100 },
+          { id: uuid(), name: 'Insurance', value: 200 },
+        ])
+      },
+      {
+        id: uuid(),
+        name: 'Food',
+        rows: new MatTableDataSource<SubcategoryRow>([
+          { id: uuid(), name: 'Groceries', value: 300 },
+          { id: uuid(), name: 'Dining Out', value: 100 },
+        ])
+      }
+    ];
+  isEditable: boolean = false;
+  editVerbiage: string = "Unlock Rows";
 
-  addData() {
-    const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
-    this.dataToDisplay = [...this.dataToDisplay, ELEMENT_DATA[randomElementIndex]];
-    this.dataSource.setData(this.dataToDisplay);
-  }
+  constructor(private financeDataService: FinanceDataService) { }
 
-  removeData() {
-    this.dataToDisplay = this.dataToDisplay.slice(0, -1);
-    this.dataSource.setData(this.dataToDisplay);
-  }
-
-  onRowClicked(row: any) {
-    console.log("row", row);
-    var index = this.dataToDisplay.indexOf(row);
-    console.log("index:", index);
-    if (index > -1) {
-      this.dataToDisplay.splice(index, 1)
+  addRow(categoryId: string) {
+    const category = this.categories.find(c => c.id === categoryId);
+    if (category) {
+      const currentData = category.rows.data;
+      const newData = [...currentData, { id: uuid(), name: '', value: 0 }];
+      category.rows.data = newData;
+      category.rows._updateChangeSubscription();
     }
-    this.dataSource.setData(this.dataToDisplay);
-  }
-}
-
-class ExampleDataSource extends DataSource<PeriodicElement> {
-  private _dataStream = new ReplaySubject<PeriodicElement[]>();
-
-  constructor(initialData: PeriodicElement[]) {
-    super();
-    this.setData(initialData);
   }
 
-  connect(): Observable<PeriodicElement[]> {
-    return this._dataStream;
+  deleteRow(categoryId: string, rowId: string) {
+    const category = this.categories.find(c => c.id === categoryId);
+    if (category) {
+      const updatedData = category.rows.data.filter(row => row.id !== rowId);
+      category.rows.data = updatedData;
+      category.rows._updateChangeSubscription();
+    }
   }
 
-  disconnect() { }
 
-  setData(data: PeriodicElement[]) {
-    this._dataStream.next(data);
+  drop(event: CdkDragDrop<SubcategoryRow[]>, category: { rows: MatTableDataSource<SubcategoryRow> }) {
+    if (event.previousIndex !== event.currentIndex) {
+      const updatedRows = [...category.rows.data];
+      moveItemInArray(updatedRows, event.previousIndex, event.currentIndex);
+      category.rows.data = updatedRows;
+      category.rows._updateChangeSubscription();
+    }
   }
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  toggleEdit() {
+    this.isEditable = !this.isEditable;
+    if (this.isEditable) {
+      this.editVerbiage = "Lock Rows"
+    }
+    else {
+      this.editVerbiage = "Unlock Rows"
+    }
+  }
+
+  getCategoryTotal(category: { rows: MatTableDataSource<SubcategoryRow> }): number {
+    return category.rows.data.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
+  }
+
 }

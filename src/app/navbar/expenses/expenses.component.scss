@@ -1,5 +1,29 @@
+.top-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .table {
   padding: 10px;
+
+  mat-form-field.mat-mdc-form-field {
+    width: 50%;
+    margin: 10px 0px -5px 0px
+  }
+
+  .category-header {
+    position: sticky;
+    top: 0px;
+    background: #fff8f8;
+    z-index: 10;
+    padding: 0.5rem 0;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .sub-header {
+  }
 
   .row-contents {
     padding: 10px;
@@ -8,6 +32,15 @@
   }
 
   .clear-category {
-      margin: 0px 5px 0px 0px
+    display: flex;
+    align-items: center;
+
+    mat-form-field {
+      justify-content: flex-start;
+    }
+
+    button {
+      justify-content: flex-end;
+    }
   }
 }
