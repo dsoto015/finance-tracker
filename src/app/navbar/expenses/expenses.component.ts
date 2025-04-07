@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
 import { CategoryBlock, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MOCK_CATEGORIES } from '../../../../src//core/mock-data/mock-data';
 
 @Component({
   selector: 'app-expenses',
@@ -15,40 +16,15 @@ export class ExpensesComponent {
   @ViewChild('table', { static: true }) table!: MatTable<any>;
 
   displayedColumns: string[] = ['actions', 'name', 'value'];
-  categories: {
-    id: string;
-    name: string;
-    rows: MatTableDataSource<SubcategoryRow>
-    }[] = [
-      {
-        id: uuid(),
-        name: 'Housing',
-        rows: new MatTableDataSource<SubcategoryRow>([
-          { id: uuid(), name: 'Rent', value: 1200 },
-          { id: uuid(), name: 'Utilities', value: 150 },
-        ])
-      },
-      {
-        id: uuid(),
-        name: 'Transportation',
-        rows: new MatTableDataSource<SubcategoryRow>([
-          { id: uuid(), name: 'Gas', value: 100 },
-          { id: uuid(), name: 'Insurance', value: 200 },
-        ])
-      },
-      {
-        id: uuid(),
-        name: 'Food',
-        rows: new MatTableDataSource<SubcategoryRow>([
-          { id: uuid(), name: 'Groceries', value: 300 },
-          { id: uuid(), name: 'Dining Out', value: 100 },
-        ])
-      }
-    ];
+ 
   isEditable: boolean = false;
   editVerbiage: string = "Unlock Rows";
+  categories: CategoryBlock[];
+  selectedMonth: Date = new Date(); 
 
-  constructor(private financeDataService: FinanceDataService) { }
+  constructor(private financeDataService: FinanceDataService) { 
+    this.categories = MOCK_CATEGORIES;
+  }
 
   addRow(categoryId: string) {
     const category = this.categories.find(c => c.id === categoryId);
@@ -98,6 +74,42 @@ export class ExpensesComponent {
 
   getCategoryTotal(category: { rows: MatTableDataSource<SubcategoryRow> }): number {
     return category.rows.data.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
+  }
+
+  addCategory(): void {
+    const newCategory = {
+      id: uuid(),
+      name: 'NEW CATEGORY',
+      rows: new MatTableDataSource<SubcategoryRow>([])
+    };
+  
+    this.categories.push(newCategory);
+  }
+
+  deleteCategory(categoryId: string) {
+    const category = this.categories.find(c => c.id === categoryId);
+    if (category) {
+      this.categories = this.categories.filter(x => x.id != categoryId)
+    }
+  }
+
+  chosenMonthHandler(normalizedMonth: Date, datepicker: any) {
+    this.selectedMonth = normalizedMonth;
+    datepicker.close();
+
+    this.loadMonthData(normalizedMonth);
+  }
+
+  onMonthChange(event: any) {
+    const newDate = new Date(event.value);
+    this.selectedMonth = newDate;
+    this.loadMonthData(newDate);
+  }
+
+  loadMonthData(monthDate: Date) {
+    // 🧠 Replace this with a call to your service later
+    console.log('Loading data for:', monthDate);
+    // this.financeDataService.getByMonth(monthDate)... etc
   }
 
 }

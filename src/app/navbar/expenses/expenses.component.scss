@@ -11,18 +11,27 @@
     margin: 10px 0px -5px 0px
   }
 
-  .category-header {
-    position: sticky;
-    top: 0px;
-    background: #fff8f8;
-    z-index: 10;
-    padding: 0.5rem 0;
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    button {
+      margin-left: 20px;
+    }
 
-  .sub-header {
+    .category-header {
+      position: sticky;
+      top: 0px;
+      background: #fff8f8;
+      z-index: 10;
+      padding: 0.5rem 0;
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  
+  
+  }
+    .sub-header {
   }
 
   .row-contents {
@@ -51,4 +60,10 @@
   margin: 20px;
   bottom: 50px;
   right: 20px;
+}
+
+.month-selector {
+  display: flex;
+  justify-content: start;
+  margin-left: 20px;
 }

@@ -4,8 +4,31 @@
   </button>
 </div>
 
+<div class="month-selector">
+  <mat-form-field appearance="outline">
+    <mat-label>Select Month</mat-label>
+    <input matInput [matDatepicker]="picker" 
+                    [value]="selectedMonth" 
+                    (dateChange)="onMonthChange($event)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker (monthSelected)="chosenMonthHandler($event, picker)"
+                    [startAt]="selectedMonth"
+                    [startView]="'year'"
+                    datepickerMode="month">
+      </mat-datepicker>
+  </mat-form-field>
+</div>
+
 <div *ngFor="let category of categories" class="table">
-  <h3 class="category-header">{{ category.name }}</h3>
+  <div class="header">
+    <h3 class="category-header" *ngIf="!isEditable">{{ category.name }}</h3>
+    <mat-form-field *ngIf="isEditable" appearance="outline" class="category-header">
+      <input matInput [(ngModel)]="category.name" placeholder="Category Name" />
+    </mat-form-field>    
+    <button mat-raised-button *ngIf="isEditable" (click)="deleteCategory(category.id)">Delete Category
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
   <div>
     <table mat-table
            cdkDropList
@@ -64,7 +87,7 @@
 </div>
 
 <div class="new-category">
-  <button mat-fab extended>New Category
+  <button mat-fab extended (click)="addCategory()">New Category
     <mat-icon>add</mat-icon>
   </button>
 

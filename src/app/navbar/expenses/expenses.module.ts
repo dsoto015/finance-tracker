@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { FormsModule } from '@angular/forms';
 
@@ -27,7 +29,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatTableModule,
     FormsModule,
     MatTable,
-    DragDropModule
+    DragDropModule,
+    MatDatepickerModule, 
+    MatNativeDateModule
   ],
   exports: [ExpensesComponent]
 })

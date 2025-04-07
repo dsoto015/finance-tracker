@@ -1,5 +1,12 @@
 import { MatTableDataSource } from '@angular/material/table';
 
+export interface MonthExpenese {
+  totalSpent: number;
+  month: number;
+  year: number;
+  categories: CategoryBlock[]
+}
+
 export interface SubcategoryRow {
   id: string;
   name: string;
