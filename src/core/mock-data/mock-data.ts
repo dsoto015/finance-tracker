@@ -1,6 +1,7 @@
 import { MatTableDataSource } from '@angular/material/table';
 import { v4 as uuid } from 'uuid';
-import { CategoryBlock, SubcategoryRow } from '../models/expenses.model';
+import { CategoryBlock, MonthExpenese, SubcategoryRow } from '../models/expenses.model';
+
 
 export const MOCK_CATEGORIES: CategoryBlock[] = [
   {
@@ -26,5 +27,23 @@ export const MOCK_CATEGORIES: CategoryBlock[] = [
       { id: uuid(), name: 'Groceries', value: 300 },
       { id: uuid(), name: 'Dining Out', value: 100 },
     ])
+  }
+];
+
+
+export const MOCK_MONTH: MonthExpenese[] = [
+  {
+    id: uuid(),
+    month: 4,
+    year: 2025,
+    totalSpent: 1000,
+    categories: MOCK_CATEGORIES
+  },
+  {
+    id: uuid(),
+    month: 3,
+    year: 2025,
+    totalSpent: 2000,
+    categories: MOCK_CATEGORIES
   }
 ];

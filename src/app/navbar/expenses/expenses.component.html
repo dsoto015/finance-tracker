@@ -19,6 +19,10 @@
   </mat-form-field>
 </div>
 
+<div class="month-header">
+  <h2 >{{currentMonth}}</h2>
+  <p>total spent for the month: {{totalSpent}}</p>
+</div>
 <div *ngFor="let category of categories" class="table">
   <div class="header">
     <h3 class="category-header" *ngIf="!isEditable">{{ category.name }}</h3>

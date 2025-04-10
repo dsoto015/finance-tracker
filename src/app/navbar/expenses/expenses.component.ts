@@ -20,8 +20,11 @@ export class ExpensesComponent {
   isEditable: boolean = false;
   editVerbiage: string = "Unlock Rows";
   categories: CategoryBlock[];
-  selectedMonth: Date = new Date(); 
+  selectedMonth: Date = new Date();
+  currentMonth: string = new Date().toLocaleDateString('default', {month: 'long'}); 
+  totalSpent: number = 0;
 
+  
   constructor(private financeDataService: FinanceDataService) { 
     this.categories = MOCK_CATEGORIES;
   }
