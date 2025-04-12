@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
-import { CategoryBlock, SubcategoryRow } from '../../../core/models/expenses.model';
+import { CategoryBlock, MonthExpenese, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MOCK_CATEGORIES } from '../../../../src//core/mock-data/mock-data';
+import { MOCK_MONTH } from '../../../../src//core/mock-data/mock-data';
 
 @Component({
   selector: 'app-expenses',
@@ -13,20 +13,68 @@ import { MOCK_CATEGORIES } from '../../../../src//core/mock-data/mock-data';
   styleUrls: ['./expenses.component.scss']
 })
 export class ExpensesComponent {
+
   @ViewChild('table', { static: true }) table!: MatTable<any>;
 
   displayedColumns: string[] = ['actions', 'name', 'value'];
  
   isEditable: boolean = false;
   editVerbiage: string = "Unlock Rows";
-  categories: CategoryBlock[];
+  categories: CategoryBlock[] = [];
+  monthExpense: MonthExpenese[];
   selectedMonth: Date = new Date();
-  currentMonth: string = new Date().toLocaleDateString('default', {month: 'long'}); 
+  currentMonth: any;
   totalSpent: number = 0;
+  categoryTotal: number = 0;
 
   
   constructor(private financeDataService: FinanceDataService) { 
-    this.categories = MOCK_CATEGORIES;
+    this.monthExpense = MOCK_MONTH
+  }
+
+  ngOnInit() {
+    this.currentMonth = this.selectedMonth.toLocaleDateString('default', {month: 'long'});
+    this.totalSpent = this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateForm(this.selectedMonth)
+  }
+
+  updateForm(selectedMonth: Date) {
+    this.updateCategories(selectedMonth);
+  }
+
+  updateCategories(selectedMonth: Date) {
+    this.updateAllCategoryTotals(selectedMonth);
+    const match = this.monthExpense.filter(x => x.month === this.selectedMonth.getMonth() + 1).at(0);
+    if (match) {
+      this.categories = match.categories;
+    } else {
+      this.categories = []; // or handle however you'd like
+    }
+  }
+
+  updateTotalMonthSpent(currentMonth: Date): number {
+    console.log("passed in month: ", currentMonth);
+    const monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth() + 1);
+  
+    if (monthData !== undefined) {
+      console.log("data matched: ", monthData);
+  
+      const total = monthData.categories.reduce((catAcc, category) => {
+      const rowTotal = category.rows.data.reduce((rowAcc, row) => rowAcc + (row.value ?? 0), 0);
+      return catAcc + rowTotal;
+      }, 0);
+  
+      console.log("Calculated total: ", total);
+      return total;
+    }
+  
+    console.log("Month NOT found in dataset: ", monthData);
+    return 0;
+  }
+  
+  updateAllCategoryTotals(currentMonth: Date) {
+    const monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth() + 1);
+    monthData?.categories.forEach(x => this.updateCategoryTotal(x))
   }
 
   addRow(categoryId: string) {
@@ -75,9 +123,14 @@ export class ExpensesComponent {
     }
   }
 
-  getCategoryTotal(category: { rows: MatTableDataSource<SubcategoryRow> }): number {
-    return category.rows.data.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
+
+  updateCategoryTotal(category: { rows: MatTableDataSource<SubcategoryRow> }) {
+    const total = category.rows.data.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
+    console.log("category total: ", total);
+    this.categoryTotal = total;    
   }
+
+
 
   addCategory(): void {
     const newCategory = {
@@ -113,6 +166,9 @@ export class ExpensesComponent {
     // 🧠 Replace this with a call to your service later
     console.log('Loading data for:', monthDate);
     // this.financeDataService.getByMonth(monthDate)... etc
+    this.currentMonth = monthDate.toLocaleDateString('default', {month: 'long'});
+    this.totalSpent = this.updateTotalMonthSpent(monthDate);
+    this.updateForm(monthDate)
   }
 
 }

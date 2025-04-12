@@ -20,7 +20,7 @@
 </div>
 
 <div class="month-header">
-  <h2 >{{currentMonth}}</h2>
+  <h2>{{currentMonth}}</h2>
   <p>total spent for the month: {{totalSpent}}</p>
 </div>
 <div *ngFor="let category of categories" class="table">
@@ -68,7 +68,11 @@
         <td mat-cell *matCellDef="let row">
           <div class="clear-category">
             <mat-form-field>
-              <input matInput type="text" [(ngModel)]="row.value" (keypress)="allowOnlyNumbers($event)" placeholder="Amount">
+              <input matInput type="text" 
+                              [(ngModel)]="row.value"
+                              (keypress)="allowOnlyNumbers($event)" 
+                              placeholder="Amount"
+                              (blur)="updateCategoryTotal(category)">
               <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value" (click)="row.value = null">
                 <mat-icon>close</mat-icon>
               </button>
@@ -78,7 +82,7 @@
             </button>
           </div>
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ getCategoryTotal(category) | currency }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ categoryTotal | currency }}</td>
       </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns" class="sub-header"></tr>
