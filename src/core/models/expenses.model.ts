@@ -1,6 +1,4 @@
-import { MatTableDataSource } from '@angular/material/table';
-
-export interface MonthExpenese {
+export interface MonthExpense {
   id: string;
   month: number;
   year: number;

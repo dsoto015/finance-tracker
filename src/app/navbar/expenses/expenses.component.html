@@ -1,6 +1,6 @@
 <div class="top-row">
   <button mat-button (click)="toggleEdit()" >{{editVerbiage}}
-    <mat-icon>lock</mat-icon>
+    <mat-icon>{{ isEditable ? 'lock_open' : 'lock' }}</mat-icon>
   </button>
 </div>
 
@@ -20,7 +20,7 @@
 </div>
 
 <div class="month-header">
-  <h2>{{currentMonth}}</h2>
+  <h2>{{currentMonthName}}</h2>
   <p>total spent for the month: {{totalSpent | currency}} </p>
 </div>
 <div *ngFor="let category of categories" class="table">
