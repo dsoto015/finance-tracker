@@ -11,7 +11,8 @@ export interface MonthExpenese {
 export interface CategoryBlock {
   id: string;
   name: string;
-  rows: MatTableDataSource<SubcategoryRow>; // ✅ Just ONE instance per category
+  rows: SubcategoryRow[];
+  total?: number;
 }
 
 export interface SubcategoryRow {

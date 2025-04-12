@@ -48,28 +48,35 @@ export class ExpensesComponent {
     if (match) {
       this.categories = match.categories;
     } else {
-      this.categories = []; // or handle however you'd like
+      this.categories = [];
     }
   }
 
   updateTotalMonthSpent(currentMonth: Date): number {
     console.log("passed in month: ", currentMonth);
-    const monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth() + 1);
+    let monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth() + 1);
   
-    if (monthData !== undefined) {
-      console.log("data matched: ", monthData);
+    if(monthData == undefined) {
+      let newMonthData = {
+        id: uuid(),
+        month: currentMonth.getMonth() + 1,
+        year: currentMonth.getFullYear(),
+        totalSpent: 0,
+        categories: []
+      };
   
-      const total = monthData.categories.reduce((catAcc, category) => {
-      const rowTotal = category.rows.data.reduce((rowAcc, row) => rowAcc + (row.value ?? 0), 0);
-      return catAcc + rowTotal;
-      }, 0);
-  
-      console.log("Calculated total: ", total);
-      return total;
+      this.monthExpense.push(newMonthData);    
+      monthData = newMonthData;
     }
   
-    console.log("Month NOT found in dataset: ", monthData);
-    return 0;
+    const total = monthData.categories.reduce((catAcc, category) => {
+      const rowTotal = category.rows.reduce((rowAcc, row) => rowAcc + Number(row.value ?? 0), 0);
+      return catAcc + rowTotal;
+    }, 0);
+  
+    console.log("Calculated total: ", total);
+    return total;
+      
   }
   
   updateAllCategoryTotals(currentMonth: Date) {
@@ -80,29 +87,26 @@ export class ExpensesComponent {
   addRow(categoryId: string) {
     const category = this.categories.find(c => c.id === categoryId);
     if (category) {
-      const currentData = category.rows.data;
+      const currentData = category.rows;
       const newData = [...currentData, { id: uuid(), name: '', value: 0 }];
-      category.rows.data = newData;
-      category.rows._updateChangeSubscription();
+      category.rows = newData;
     }
   }
 
   deleteRow(categoryId: string, rowId: string) {
     const category = this.categories.find(c => c.id === categoryId);
     if (category) {
-      const updatedData = category.rows.data.filter(row => row.id !== rowId);
-      category.rows.data = updatedData;
-      category.rows._updateChangeSubscription();
+      const updatedData = category.rows.filter(row => row.id !== rowId);
+      category.rows= updatedData;
     }
   }
 
 
-  drop(event: CdkDragDrop<SubcategoryRow[]>, category: { rows: MatTableDataSource<SubcategoryRow> }) {
+  drop(event: CdkDragDrop<SubcategoryRow[]>, category: { rows: SubcategoryRow[] }) {
     if (event.previousIndex !== event.currentIndex) {
-      const updatedRows = [...category.rows.data];
+      const updatedRows = [...category.rows];
       moveItemInArray(updatedRows, event.previousIndex, event.currentIndex);
-      category.rows.data = updatedRows;
-      category.rows._updateChangeSubscription();
+      category.rows = updatedRows;
     }
   }
 
@@ -124,10 +128,11 @@ export class ExpensesComponent {
   }
 
 
-  updateCategoryTotal(category: { rows: MatTableDataSource<SubcategoryRow> }) {
-    const total = category.rows.data.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
+  updateCategoryTotal(category: CategoryBlock) {
+    const total = category.rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
     console.log("category total: ", total);
-    this.categoryTotal = total;    
+    category.total = total;
+    this.totalSpent = this.updateTotalMonthSpent(this.selectedMonth);
   }
 
 
@@ -136,7 +141,7 @@ export class ExpensesComponent {
     const newCategory = {
       id: uuid(),
       name: 'NEW CATEGORY',
-      rows: new MatTableDataSource<SubcategoryRow>([])
+      rows: []
     };
   
     this.categories.push(newCategory);
@@ -158,7 +163,6 @@ export class ExpensesComponent {
 
   onMonthChange(event: any) {
     const newDate = new Date(event.value);
-    this.selectedMonth = newDate;
     this.loadMonthData(newDate);
   }
 
@@ -171,4 +175,20 @@ export class ExpensesComponent {
     this.updateForm(monthDate)
   }
 
+  clearValue(categoryId: string, rowId: string) {
+    const currentMonthData = this.monthExpense.find(x => x.month === this.selectedMonth.getMonth() + 1);
+  
+    if (!currentMonthData) return;
+  
+    const category = currentMonthData.categories.find(c => c.id === categoryId);
+    if (!category) return;
+  
+    const row = category.rows.find(r => r.id === rowId);
+    if (!row) return;
+  
+    row.value = null;
+    this.updateCategoryTotal(category);
+  }
+  
 }
+

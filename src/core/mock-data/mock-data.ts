@@ -7,18 +7,18 @@ export const MOCK_CATEGORIES_ONE: CategoryBlock[] = [
   {
     id: uuid(),
     name: 'Travel',
-    rows: new MatTableDataSource<SubcategoryRow>([
+    rows: [
       { id: uuid(), name: 'TV', value: 14 },
       { id: uuid(), name: 'Water', value: 30 },
-    ])
+    ]
   },
   {
     id: uuid(),
     name: 'Fun',
-    rows: new MatTableDataSource<SubcategoryRow>([
+    rows: [
       { id: uuid(), name: 'Bills', value: 100 },
       { id: uuid(), name: 'Insurance', value: 20000 },
-    ])
+    ]
   }
 ];
 
@@ -26,26 +26,26 @@ export const MOCK_CATEGORIES_TWO: CategoryBlock[] = [
   {
     id: uuid(),
     name: 'Housing',
-    rows: new MatTableDataSource<SubcategoryRow>([
+    rows: [
       { id: uuid(), name: 'Rent', value: 1200 },
       { id: uuid(), name: 'Utilities', value: 150 },
-    ])
+    ]
   },
   {
     id: uuid(),
     name: 'Transportation',
-    rows: new MatTableDataSource<SubcategoryRow>([
+    rows: [
       { id: uuid(), name: 'Gas', value: 100 },
       { id: uuid(), name: 'Insurance', value: 200 },
-    ])
+    ]
   },
   {
     id: uuid(),
     name: 'Food',
-    rows: new MatTableDataSource<SubcategoryRow>([
+    rows: [
       { id: uuid(), name: 'Groceries', value: 300 },
       { id: uuid(), name: 'Dining Out', value: 100 },
-    ])
+    ]
   }
 ];
 

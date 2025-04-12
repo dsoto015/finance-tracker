@@ -21,7 +21,7 @@
 
 <div class="month-header">
   <h2>{{currentMonth}}</h2>
-  <p>total spent for the month: {{totalSpent}}</p>
+  <p>total spent for the month: {{totalSpent | currency}} </p>
 </div>
 <div *ngFor="let category of categories" class="table">
   <div class="header">
@@ -36,7 +36,7 @@
   <div>
     <table mat-table
            cdkDropList
-           [cdkDropListData]="category.rows.data"
+           [cdkDropListData]="category.rows"
            [cdkDropListConnectedTo]="[]"
            [id]="category.id"
            (cdkDropListDropped)="drop($event, category)"
@@ -70,10 +70,11 @@
             <mat-form-field>
               <input matInput type="text" 
                               [(ngModel)]="row.value"
+                              [name]="'value-' + category.id + '-' + row.id"
                               (keypress)="allowOnlyNumbers($event)" 
                               placeholder="Amount"
-                              (blur)="updateCategoryTotal(category)">
-              <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value" (click)="row.value = null">
+                              (ngModelChange)="updateCategoryTotal(category)">
+              <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value" (click)="clearValue(category.id, row.id)">
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
@@ -82,7 +83,7 @@
             </button>
           </div>
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ categoryTotal | currency }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ category.total| currency }}</td>
       </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns" class="sub-header"></tr>
