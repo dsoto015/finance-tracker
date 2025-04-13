@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ElectronService {
-  private electron = (window as any).electron;
+declare global {
+  interface Window {
+    electron: {
+      loadExpenses: () => Promise<any>;
+      saveExpenses: (data: any) => Promise<{ success: boolean }>;
+    };
+  }
+}
 
-  loadExpenses(): Promise<any[]> {
-    return this.electron?.loadExpenses?.() || Promise.resolve([]);
+@Injectable({ providedIn: 'root' })
+export class ElectronService {
+  loadExpenses(): Promise<any> {
+    return window.electron?.loadExpenses() ?? Promise.resolve([]);
   }
 
-  saveExpenses(data: any[]): Promise<any> {
-    return this.electron?.saveExpenses?.(data) || Promise.resolve({ success: false });
+  saveExpenses(data: any): Promise<{ success: boolean }> {
+    return window.electron?.saveExpenses(data) ?? Promise.resolve({ success: false });
   }
 }

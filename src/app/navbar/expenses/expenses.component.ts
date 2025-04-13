@@ -1,9 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MOCK_MONTH } from '../../../../src/core/mock-data/mock-data';
 
 @Component({
   selector: 'app-expenses',
@@ -16,7 +15,8 @@ export class ExpensesComponent {
   displayedColumns: string[] = ['actions', 'name', 'value'];
   isEditable = false;
   categories: CategoryBlock[] = [];
-  monthExpense: MonthExpense[];
+  monthExpenses: MonthExpense[] = [];
+  currentMonthExpense: MonthExpense;
   selectedMonth: Date = new Date();
   currentMonthName: string = '';
   totalSpent = 0;
@@ -26,63 +26,79 @@ export class ExpensesComponent {
   }
 
   constructor(private financeDataService: FinanceDataService) {
-    this.monthExpense = MOCK_MONTH;
+    this.currentMonthExpense = this.getCurrentMonthExpense();
   }
 
-  ngOnInit(): void {
+  
+  async ngOnInit(): Promise<void> {
+    this.monthExpenses = await this.financeDataService.loadExpenses() as MonthExpense[];
+    this.currentMonthExpense = this.getCurrentMonthExpense();
     this.currentMonthName = this.getMonthName(this.selectedMonth);
-    this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateTotalMonthSpent();
     this.updateForm(this.selectedMonth);
+  }
+
+  getCurrentMonthExpense(): MonthExpense {
+    const foundMonthExpense = this.monthExpenses.find(x => x.month === this.selectedMonth.getMonth())
+    if(foundMonthExpense != undefined) {
+      return foundMonthExpense;
+    }
+    
+    const monthData = {
+      id: uuid(),
+      month: this.selectedMonth.getMonth(),
+      year: this.selectedMonth.getFullYear(),
+      totalSpent: 0,
+      categories: []
+    };
+    this.monthExpenses.push(monthData);
+    return monthData;
   }
 
   updateForm(selectedMonth: Date): void {
     this.updateCategories(selectedMonth);
+    this.sortRows();
+  }
+
+  sortRows() {
+    this.currentMonthExpense.categories.forEach(z => z.rows.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
   }
 
   updateCategories(selectedMonth: Date): void {
-    this.updateAllCategoryTotals(selectedMonth);
-    const match = this.monthExpense.find(x => x.month === selectedMonth.getMonth());
-    this.categories = match ? match.categories : [];
+    this.updateAllCategoryTotals();
+    this.categories = this.currentMonthExpense ? this.currentMonthExpense.categories : [];
   }
 
-  updateTotalMonthSpent(currentMonth: Date): void {
-    let monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth());
+  updateTotalMonthSpent(): void {
+    let monthData = this.getCurrentMonthExpense();
 
-    if (!monthData) {
-      monthData = {
-        id: uuid(),
-        month: currentMonth.getMonth(),
-        year: currentMonth.getFullYear(),
-        totalSpent: 0,
-        categories: []
-      };
-      this.monthExpense.push(monthData);
-    }
-
-    this.totalSpent = monthData.categories.reduce((catAcc, category) => {
+    const total = monthData.categories.reduce((catAcc, category) => {
       const rowTotal = category.rows.reduce((rowAcc, row) => rowAcc + Number(row.value ?? 0), 0);
       return catAcc + rowTotal;
     }, 0);
+    
+    this.totalSpent = total;
   }
 
-  updateAllCategoryTotals(currentMonth: Date): void {
-    const monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth());
-    monthData?.categories.forEach(x => this.updateCategoryTotal(x));
+  updateAllCategoryTotals(): void {
+    this.currentMonthExpense.categories.forEach(x => this.updateCategoryTotal(x), );
   }
 
   addRow(categoryId: string): void {
     const category = this.getCategory(categoryId);
     if (category) {
-      category.rows = [...category.rows, { id: uuid(), name: '', value: 0 }];
+      const nextOrder = category.rows.length;
+      category.rows = [...category.rows, { id: uuid(), name: '', value: 0, order: nextOrder }];
     }
   }
+  
 
   deleteRow(categoryId: string, rowId: string): void {
     const category = this.getCategory(categoryId);
     if (category !== undefined) {
       category.rows = category.rows.filter(row => row.id !== rowId);
       
-      this.updateTotalMonthSpent(this.selectedMonth);
+      this.updateTotalMonthSpent();
       this.updateCategoryTotal(category);
     }
   }
@@ -91,9 +107,11 @@ export class ExpensesComponent {
     if (event.previousIndex !== event.currentIndex) {
       const updatedRows = [...category.rows];
       moveItemInArray(updatedRows, event.previousIndex, event.currentIndex);
+      updatedRows.forEach((row, index) => row.order = index);
       category.rows = updatedRows;
     }
   }
+  
 
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
@@ -109,11 +127,21 @@ export class ExpensesComponent {
   updateCategoryTotal(category: CategoryBlock): void {
     const total = category.rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
     category.total = total;
-    this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateTotalMonthSpent();
   }
 
   addCategory(): void {
-    this.categories.push({ id: uuid(), name: 'NEW CATEGORY', rows: [] });
+    this.categories.push({ 
+      id: uuid(),
+      name: 'NEW CATEGORY',
+      rows: [ 
+        {
+          id: uuid(),
+          order: 0,
+          name: "",
+          value: null
+        }
+      ] });
     this.isEditable = true;
   }
 
@@ -123,7 +151,7 @@ export class ExpensesComponent {
       return;
     
     categoryToDelete.rows.forEach(x => this.deleteRow(categoryId, x.id));
-    this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateTotalMonthSpent();
     this.categories = this.categories.filter(x => x.id !== categoryToDelete.id);
   }
 
@@ -139,7 +167,9 @@ export class ExpensesComponent {
 
   loadMonthData(monthDate: Date): void {
     this.currentMonthName = this.getMonthName(monthDate);
-    this.updateTotalMonthSpent(monthDate);
+    this.selectedMonth = monthDate;
+    this.currentMonthExpense = this.getCurrentMonthExpense();
+    this.updateTotalMonthSpent();
     this.updateForm(monthDate);
   }
 
@@ -158,5 +188,10 @@ export class ExpensesComponent {
 
   getMonthName(date: Date): string {
     return date.toLocaleDateString('default', { month: 'long' });
+  }
+
+  saveChanges(): void {
+    this.financeDataService.save(this.monthExpenses);
+    this.isEditable = false;
   }
 }

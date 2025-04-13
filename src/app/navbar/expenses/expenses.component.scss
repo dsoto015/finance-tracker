@@ -54,12 +54,18 @@
   }
 }
 
-.new-category {
+.floating-buttons {
   z-index: 100;
   position: fixed;
   margin: 20px;
   bottom: 50px;
   right: 20px;
+
+  .submit {
+    margin: 0px 0px 0px 30px;
+    background-color: #DCF2E0;
+    color: black;
+  }
 }
 
 .month-selector {

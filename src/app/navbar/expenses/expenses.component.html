@@ -69,12 +69,13 @@
           <div class="clear-category">
             <mat-form-field>
               <input matInput type="text" 
+                              placeholder="Amount"
                               [(ngModel)]="row.value"
                               [name]="'value-' + category.id + '-' + row.id"
+                              [disabled]="isEditable"
                               (keypress)="allowOnlyNumbers($event)" 
-                              placeholder="Amount"
                               (ngModelChange)="updateCategoryTotal(category)">
-              <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value" (click)="clearValue(category.id, row.id)">
+              <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value && !isEditable" (click)="clearValue(category.id, row.id)">
                 <mat-icon>close</mat-icon>
               </button>
             </mat-form-field>
@@ -95,9 +96,12 @@
   <button mat-button *ngIf="isEditable" (click)="addRow(category.id)">+ Add Row</button>
 </div>
 
-<div class="new-category">
-  <button mat-fab extended (click)="addCategory()">New Category
+<div class="floating-buttons">
+  <button class="new-category" mat-fab extended (click)="addCategory()">New Category
     <mat-icon>add</mat-icon>
   </button>
-
+  <button *ngIf="isEditable" class="submit" mat-fab extended (click)="saveChanges()">Submit
+    <mat-icon>check</mat-icon>
+  </button>
+  
 </div>
