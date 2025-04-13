@@ -31,7 +31,7 @@ export class ExpensesComponent {
 
   ngOnInit(): void {
     this.currentMonthName = this.getMonthName(this.selectedMonth);
-    this.totalSpent = this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateTotalMonthSpent(this.selectedMonth);
     this.updateForm(this.selectedMonth);
   }
 
@@ -45,7 +45,7 @@ export class ExpensesComponent {
     this.categories = match ? match.categories : [];
   }
 
-  updateTotalMonthSpent(currentMonth: Date): number {
+  updateTotalMonthSpent(currentMonth: Date): void {
     let monthData = this.monthExpense.find(x => x.month === currentMonth.getMonth());
 
     if (!monthData) {
@@ -59,7 +59,7 @@ export class ExpensesComponent {
       this.monthExpense.push(monthData);
     }
 
-    return monthData.categories.reduce((catAcc, category) => {
+    this.totalSpent = monthData.categories.reduce((catAcc, category) => {
       const rowTotal = category.rows.reduce((rowAcc, row) => rowAcc + Number(row.value ?? 0), 0);
       return catAcc + rowTotal;
     }, 0);
@@ -79,8 +79,11 @@ export class ExpensesComponent {
 
   deleteRow(categoryId: string, rowId: string): void {
     const category = this.getCategory(categoryId);
-    if (category) {
+    if (category !== undefined) {
       category.rows = category.rows.filter(row => row.id !== rowId);
+      
+      this.updateTotalMonthSpent(this.selectedMonth);
+      this.updateCategoryTotal(category);
     }
   }
 
@@ -106,7 +109,7 @@ export class ExpensesComponent {
   updateCategoryTotal(category: CategoryBlock): void {
     const total = category.rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
     category.total = total;
-    this.totalSpent = this.updateTotalMonthSpent(this.selectedMonth);
+    this.updateTotalMonthSpent(this.selectedMonth);
   }
 
   addCategory(): void {
@@ -115,8 +118,13 @@ export class ExpensesComponent {
   }
 
   deleteCategory(categoryId: string): void {
-    this.categories = this.categories.filter(x => x.id !== categoryId);
-    this.totalSpent = this.updateTotalMonthSpent(this.selectedMonth);
+    const categoryToDelete = this.categories.find(x => x.id == categoryId);
+    if(categoryToDelete === undefined)
+      return;
+    
+    categoryToDelete.rows.forEach(x => this.deleteRow(categoryId, x.id));
+    this.updateTotalMonthSpent(this.selectedMonth);
+    this.categories = this.categories.filter(x => x.id !== categoryToDelete.id);
   }
 
   chosenMonthHandler(normalizedMonth: Date, datepicker: any): void {
@@ -131,7 +139,7 @@ export class ExpensesComponent {
 
   loadMonthData(monthDate: Date): void {
     this.currentMonthName = this.getMonthName(monthDate);
-    this.totalSpent = this.updateTotalMonthSpent(monthDate);
+    this.updateTotalMonthSpent(monthDate);
     this.updateForm(monthDate);
   }
 
