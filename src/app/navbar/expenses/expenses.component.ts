@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DefaultTemplateService } from '../../../core/services/default-template-service';
 
 @Component({
   selector: 'app-expenses',
@@ -15,23 +16,26 @@ export class ExpensesComponent {
   displayedColumns: string[] = ['actions', 'name', 'value'];
   isEditable = false;
   categories: CategoryBlock[] = [];
+  defaultCategories: CategoryBlock[] = [];
   monthExpenses: MonthExpense[] = [];
   currentMonthExpense: MonthExpense;
   selectedMonth: Date = new Date();
   currentMonthName: string = '';
   totalSpent = 0;
-  
+  totalSpentWithoutRecurring = 0;
+
   get editVerbiage(): string {
     return this.isEditable ? 'Lock Rows' : 'Unlock Rows';
   }
 
-  constructor(private financeDataService: FinanceDataService) {
+  constructor(private financeDataService: FinanceDataService,
+              private defaultTemplateService: DefaultTemplateService) {
     this.currentMonthExpense = this.getCurrentMonthExpense();
   }
-
   
   async ngOnInit(): Promise<void> {
     this.monthExpenses = await this.financeDataService.loadExpenses() as MonthExpense[];
+    this.defaultCategories = await this.defaultTemplateService.loadDefaults() as CategoryBlock[]
     this.currentMonthExpense = this.getCurrentMonthExpense();
     this.currentMonthName = this.getMonthName(this.selectedMonth);
     this.updateTotalMonthSpent();
@@ -49,7 +53,7 @@ export class ExpensesComponent {
       month: this.selectedMonth.getMonth(),
       year: this.selectedMonth.getFullYear(),
       totalSpent: 0,
-      categories: []
+      categories: this.defaultCategories
     };
     this.monthExpenses.push(monthData);
     return monthData;
@@ -77,6 +81,14 @@ export class ExpensesComponent {
       return catAcc + rowTotal;
     }, 0);
     
+    const totalMinusRecurring = monthData.categories.reduce((catAcc, category) => {
+      const rowTotal = category.rows.reduce((rowAcc, row) => {
+        return row.recurring ? rowAcc : rowAcc + Number(row.value ?? 0);
+      }, 0);
+      return catAcc + rowTotal;
+    }, 0);    
+    
+    this.totalSpentWithoutRecurring = totalMinusRecurring;
     this.totalSpent = total;
   }
 
@@ -88,10 +100,9 @@ export class ExpensesComponent {
     const category = this.getCategory(categoryId);
     if (category) {
       const nextOrder = category.rows.length;
-      category.rows = [...category.rows, { id: uuid(), name: '', value: 0, order: nextOrder }];
+      category.rows = [...category.rows, { id: uuid(), name: '', value: 0, order: nextOrder, recurring: false }];
     }
   }
-  
 
   deleteRow(categoryId: string, rowId: string): void {
     const category = this.getCategory(categoryId);
@@ -139,7 +150,8 @@ export class ExpensesComponent {
           id: uuid(),
           order: 0,
           name: "",
-          value: null
+          value: null,
+          recurring: false,
         }
       ] });
     this.isEditable = true;

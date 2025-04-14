@@ -1,0 +1,59 @@
+[
+    {
+        "name": "Entertainment",
+        "rows": [ 
+            { "name": "Golf" }, 
+            { "name": "Outdoor Activities" }
+        ]
+    },
+    {
+        "name": "Everyday",
+        "rows": [
+            { "name": "Groceries" },
+            { "name": "Amazon" },
+            { "name": "Target/Walmart" },
+            { "name": "Clothes" },
+            { "name": "Hair/Beauty" },
+            { "name": "Eating Out" },
+            { "name": "Costco" }
+        ]
+    },
+    {
+        "name": "Health",
+        "rows": [
+            { "name": "Doctors Visit" }
+        ]
+    },
+    {
+        "name": "Housing",
+        "rows": [
+            { "name": "Rent", "value": 1500, "recurring": true },
+            { "name": "TV","recurring": true },
+            { "name": "Internet", "value": 34, "recurring": true},
+            { "name": "Electricity", "recurring": true },
+            { "name": "Heat/Gas", "recurring": true }
+        ]
+    },
+    {
+        "name": "Insurance",
+        "rows": [
+            { "name": "Car", "value": 201, "recurring": true }            
+        ]
+    },
+    {
+        "name": "Subscriptions",
+        "rows": [
+            { "name": "Google Photos", "value": 3, "recurring": true },
+            { "name": "Spotify", "value": 17, "recurring": true },
+            { "name": "Apple", "value": 13, "recurring": true },
+            { "name": "Lacey Phone", "value": 40, "recurring": true }
+        ]
+    },
+    {
+        "name": "Transportation",
+        "rows": [
+            { "name": "Gas" },
+            { "name": "Toll Road" }
+        ]
+    }
+]

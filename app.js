@@ -7,6 +7,7 @@ let mainWindow;
 
 // Get a safe path to store the file
 const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
+const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json');
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -60,6 +61,31 @@ ipcMain.handle('save-expenses', async (_, data) => {
     return { success: false, error };
   }
 });
+
+ipcMain.handle('load-defaults', async () => {
+  try {
+    if (!fs.existsSync(defaultsPath)) {
+      fs.writeFileSync(defaultsPath, '[]');
+    }
+    const data = fs.readFileSync(defaultsPath, 'utf-8');
+    console.log('Saving expenses to:', defaultsPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading expenses:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('save-defaults', async (_, data) => {
+  try {
+    fs.writeFileSync(defaultsPath, JSON.stringify(data, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving expenses:', error);
+    return { success: false, error };
+  }
+});
+
 
 app.on('ready', createWindow);
 app.on('window-all-closed', () => {

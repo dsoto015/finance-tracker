@@ -18,5 +18,6 @@ export interface SubcategoryRow {
   name: string;
   value: number | null;
   order: number;
+  recurring: boolean
 }
 
