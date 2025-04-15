@@ -1,88 +1,101 @@
-.top-row {
-  display: flex;
-  justify-content: flex-end;
-}
+.expenses {
+  margin: 0px 100px;
 
-.table {
-  padding: 10px;
 
-  mat-form-field.mat-mdc-form-field {
-    width: 50%;
-    margin: 10px 0px -5px 0px
-  }
-
-  .header {
+  .top-row {
     display: flex;
-    justify-content: space-between;
-    button {
-      margin-left: 20px;
-    }
-
-    .category-header {
-      position: sticky;
-      top: 0px;
-      background: #fff8f8;
-      z-index: 10;
-      padding: 0.5rem 0;
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-  
-  
-  }
-    .sub-header {
+    justify-content: flex-end;
   }
 
-  .row-contents {
+  .table {
     padding: 10px;
-    align-items: center;
-    display: flex;
-  }
 
-  .clear-category {
-    display: flex;
-    align-items: center;
-
-    mat-form-field {
-      justify-content: flex-start;
+    mat-form-field.mat-mdc-form-field {
+      margin: 10px 0px -5px 0px
     }
 
-    button {
-      justify-content: flex-end;
+    .subcategory {
+      width: 45%;
+    }
+
+    .amount {
+      width: 30%;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        margin-left: 20px;
+      }
+
+      .category-header {
+        position: sticky;
+        top: 0px;
+        background: #fff8f8;
+        z-index: 10;
+        padding: 0.5rem 0;
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+
+
+    }
+
+    .sub-header {}
+
+    .row-contents {
+      padding: 10px;
+      align-items: center;
+      display: flex;
+    }
+
+    .clear-category {
+      display: flex;
+      align-items: center;
+
+      mat-form-field {
+        justify-content: flex-start;
+      }
+
+      button {
+        justify-content: flex-end;
+      }
     }
   }
-}
 
-.floating-buttons {
-  z-index: 100;
-  position: fixed;
-  margin: 20px;
-  bottom: 50px;
-  right: 20px;
+  .floating-buttons {
+    z-index: 100;
+    position: fixed;
+    margin: 20px;
+    bottom: 50px;
+    right: 20px;
 
-  .submit {
-    margin: 0px 0px 0px 30px;
-    background-color: #DCF2E0;
-    color: black;
+    .submit {
+      margin: 0px 0px 0px 30px;
+      background-color: #DCF2E0;
+      color: black;
+    }
   }
-}
 
-.month-selector {
-  display: flex;
-  justify-content: start;
-  margin-left: 20px;
-}
+  .month-selector {
+    display: flex;
+    justify-content: start;
+    margin-left: 20px;
+  }
 
-.month-header {
-  display: flex;
-  margin: 10px;
-
-  p {
-    font-weight: 600;
+  .month-header {
+    display: flex;
     margin: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    p {
+      font-weight: 600;
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }

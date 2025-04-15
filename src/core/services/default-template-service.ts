@@ -14,20 +14,7 @@ export class DefaultTemplateService {
     const isElectron = !!window?.electron?.loadExpenses;
     let data: CategoryBlock[];
     if (isElectron) {
-        data = await window.electron.loadDefaults() ?? [];  
-        console.log(data);
-        //return data;
-        return data.map((category, catIndex) => ({
-            id: uuid(),
-            name: category.name,
-            rows: category.rows.map((row, rowIndex) => ({
-              id: uuid(),
-              name: row.name,
-              value: row.value ?? null,
-              order: rowIndex,
-              recurring: row.recurring
-            }))
-          }));
+        data = await window.electron.loadDefaults() ?? [];        
     } else {
       console.log('[ng serve] Loading mock expenses');
       try {
@@ -41,6 +28,19 @@ export class DefaultTemplateService {
       }
     }
 
+    data = data.map((category, catIndex) => ({
+      id: uuid(),
+      name: category.name,
+      rows: category.rows.map((row, rowIndex) => ({
+        id: uuid(),
+        name: row.name,
+        value: row.value ?? null,
+        order: rowIndex,
+        recurring: row.recurring ?? false
+      }))
+
+    }));
+    console.log("service returned: ", data);
     return data;
   }
 
