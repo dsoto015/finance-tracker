@@ -13,6 +13,7 @@ import { DefaultTemplateService } from '../../../core/services/default-template-
 })
 export class ExpensesComponent {
 
+
   displayedColumns: string[] = ['actions', 'name', 'value'];
   isEditable = false;
   categories: CategoryBlock[] = [];

@@ -10,6 +10,7 @@ import { NavbarComponent } from './navbar.component';
 import { IncomeModule } from './income/income.module';
 import { RouterModule } from '@angular/router';
 import { ExpensesModule } from './expenses/expenses.module';
+import { SummaryModule } from './summary/summary.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { ExpensesModule } from './expenses/expenses.module';
     SetupModule,
     IncomeModule,
     ExpensesModule,
+    SummaryModule,
     RouterModule,
     MatToolbarModule,
     MatButtonModule,

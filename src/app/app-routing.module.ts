@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SetupComponent } from './navbar/setup/setup.component';
 import { IncomeComponent } from './navbar/income/income.component';
 import { ExpensesComponent } from './navbar/expenses/expenses.component';
+import { SummaryComponent } from './navbar/summary/summary.component';
 
 export const routes: Routes = [
   {
@@ -18,7 +19,12 @@ export const routes: Routes = [
   {
     path: 'expenses',
     component: ExpensesComponent,
-    title: "Expenses"
+    title: "Expenses",
+  },
+  {
+    path: 'summary',
+    component: SummaryComponent,
+    title: "Summary"
   }
 ];
 
