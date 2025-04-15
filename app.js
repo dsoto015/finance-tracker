@@ -8,6 +8,7 @@ let mainWindow;
 // Get a safe path to store the file
 const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
 const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json');
+const fallbackDefaultsPath = path.join(__dirname, `public/mock-data/mock-default-categories.json`);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -65,7 +66,8 @@ ipcMain.handle('save-expenses', async (_, data) => {
 ipcMain.handle('load-defaults', async () => {
   try {
     if (!fs.existsSync(defaultsPath)) {
-      fs.writeFileSync(defaultsPath, '[]');
+      const data = fs.readFileSync(fallbackDefaultsPath, 'utf-8');
+      fs.writeFileSync(defaultsPath, data);
     }
     const data = fs.readFileSync(defaultsPath, 'utf-8');
     console.log('Saving expenses to:', defaultsPath);

@@ -2,8 +2,7 @@
     {
         "name": "Entertainment",
         "rows": [ 
-            { "name": "Golf" }, 
-            { "name": "Outdoor Activities" }
+            { "name": "Golf" }
         ]
     },
     {
@@ -16,12 +15,6 @@
             { "name": "Hair/Beauty" },
             { "name": "Eating Out" },
             { "name": "Costco" }
-        ]
-    },
-    {
-        "name": "Health",
-        "rows": [
-            { "name": "Doctors Visit" }
         ]
     },
     {
@@ -52,8 +45,7 @@
     {
         "name": "Transportation",
         "rows": [
-            { "name": "Gas" },
-            { "name": "Toll Road" }
+            { "name": "Gas" }
         ]
     }
 ]
