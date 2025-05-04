@@ -6,14 +6,20 @@
   </div>
 
   <div class="month-selector">
+    <button class="chevron" mat-icon-button (click)="prevMonth()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
     <mat-form-field appearance="outline">
       <mat-label>Select Month</mat-label>
-      <input matInput [matDatepicker]="picker" [value]="selectedMonth" (dateChange)="onMonthChange($event)">
+      <input matInput [matDatepicker]="picker" [value]="selectedMonth">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker (monthSelected)="chosenMonthHandler($event, picker)" [startAt]="selectedMonth"
+      <mat-datepicker #picker (monthSelected)="onChosenMonth($event, picker)" [startAt]="selectedMonth"
         [startView]="'year'" datepickerMode="month">
       </mat-datepicker>
     </mat-form-field>
+    <button class="chevron" mat-icon-button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>  
   </div>
 
   <div class="month-header">
@@ -63,7 +69,8 @@
               <mat-form-field class="amount">
                 <input matInput type="text" placeholder="Amount" [(ngModel)]="row.value"
                   [name]="'value-' + category.id + '-' + row.id" [disabled]="isEditable"
-                  (keypress)="allowOnlyNumbers($event)" (ngModelChange)="updateCategoryTotal(category)">
+                  (keypress)="allowOnlyNumbers($event)" (ngModelChange)="updateCategoryTotal(category)"
+                  (blur)="saveInput(category.id, row.id, row.value)">
                 <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value && !isEditable"
                   (click)="clearValue(category.id, row.id)">
                   <mat-icon>close</mat-icon>

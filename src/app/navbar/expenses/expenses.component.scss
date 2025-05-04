@@ -1,25 +1,20 @@
 .expenses {
   margin: 0px 100px;
 
-
   .top-row {
     display: flex;
     justify-content: flex-end;
   }
 
   .table {
-    padding: 10px;
+    padding: 0px 150px;
 
     mat-form-field.mat-mdc-form-field {
       margin: 10px 0px -5px 0px
     }
 
     .subcategory {
-      width: 45%;
-    }
-
-    .amount {
-      width: 30%;
+      
     }
 
     .header {
@@ -40,9 +35,8 @@
         font-size: 1.25rem;
         font-weight: bold;
       }
-
-
     }
+
 
     .sub-header {}
 
@@ -54,10 +48,15 @@
 
     .clear-category {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
+
+      .amount {     
+        width: 125px;
+      }
+  
 
       mat-form-field {
-        justify-content: flex-start;
+        justify-content: flex-end;
       }
 
       button {

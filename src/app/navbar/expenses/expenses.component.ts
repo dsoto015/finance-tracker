@@ -12,8 +12,6 @@ import { DefaultTemplateService } from '../../../core/services/default-template-
   styleUrls: ['./expenses.component.scss']
 })
 export class ExpensesComponent {
-
-
   displayedColumns: string[] = ['actions', 'name', 'value'];
   isEditable = false;
   categories: CategoryBlock[] = [];
@@ -22,7 +20,7 @@ export class ExpensesComponent {
   currentMonthExpense: MonthExpense;
   selectedMonth: Date = new Date();
   currentMonthName: string = '';
-  totalSpent = 0;
+  totalSpent = 10;
   totalSpentWithoutRecurring = 0;
 
   get editVerbiage(): string {
@@ -44,20 +42,44 @@ export class ExpensesComponent {
   }
 
   getCurrentMonthExpense(): MonthExpense {
-    const foundMonthExpense = this.monthExpenses.find(x => x.month === this.selectedMonth.getMonth())
+    const foundMonthExpense = this.monthExpenses.find(x => x.month === this.selectedMonth.getMonth() && x.year == this.selectedMonth.getFullYear());
     if(foundMonthExpense != undefined) {
       return foundMonthExpense;
     }
-    
     const monthData = {
       id: uuid(),
       month: this.selectedMonth.getMonth(),
       year: this.selectedMonth.getFullYear(),
       totalSpent: 0,
-      categories: this.defaultCategories
+      categories: this.defaultCategories.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        rows: cat.rows.map(row => ({
+          id: uuid(),
+          name: row.name,
+          value: row.value ?? null,
+          order: row.order,
+          recurring: row.recurring ?? false
+        })),
+        total: 0
+      }))
     };
     this.monthExpenses.push(monthData);
     return monthData;
+  }
+
+  saveInput(categoryId: string, rowId: string, amount: number): void {
+    // Find the category and row by their IDs
+    const category = this.getCategory(categoryId);
+    const row = category?.rows.find(r => r.id === rowId);
+    // If both category and row are found, update the value
+    if (row) {
+      row.value = amount;
+      this.updateCategoryTotal(category!);
+    }
+    console.log('save value:', amount);
+    this.updateForm(this.selectedMonth);
+    this.saveChanges();
   }
 
   updateForm(selectedMonth: Date): void {
@@ -168,20 +190,18 @@ export class ExpensesComponent {
     this.categories = this.categories.filter(x => x.id !== categoryToDelete.id);
   }
 
-  chosenMonthHandler(normalizedMonth: Date, datepicker: any): void {
+  onChosenMonth(normalizedMonth: Date, datepicker: any): void {
+    // this.saveChanges();
     this.selectedMonth = normalizedMonth;
     datepicker.close();
     this.loadMonthData(normalizedMonth);
-  }
-
-  onMonthChange(event: any): void {
-    this.loadMonthData(new Date(event.value));
   }
 
   loadMonthData(monthDate: Date): void {
     this.currentMonthName = this.getMonthName(monthDate);
     this.selectedMonth = monthDate;
     this.currentMonthExpense = this.getCurrentMonthExpense();
+    console.log('loadMonthData, new month: ', this.currentMonthExpense);
     this.updateTotalMonthSpent();
     this.updateForm(monthDate);
   }
@@ -203,7 +223,25 @@ export class ExpensesComponent {
     return date.toLocaleDateString('default', { month: 'long' });
   }
 
+  nextMonth() {
+    this.saveChanges();
+    const nextMonth = this.selectedMonth.getMonth() + 1;
+    const normalizedMonth = new Date(this.selectedMonth.getFullYear(), nextMonth, 1);
+    console.log('nextMonth', nextMonth);
+    this.loadMonthData(normalizedMonth);
+  }
+
+  prevMonth() {
+    this.saveChanges();
+    const previousMonth = this.selectedMonth.getMonth() - 1;
+    const normalizedMonth = new Date(this.selectedMonth.getFullYear(), previousMonth, 1);
+    console.log('previousMonth', previousMonth);
+    this.loadMonthData(normalizedMonth);
+  }
+
   saveChanges(): void {
+    console.log('Saving changes..total spent is: ', this.totalSpent);
+    this.currentMonthExpense.totalSpent = this.totalSpent;
     this.financeDataService.save(this.monthExpenses);
     this.isEditable = false;
   }

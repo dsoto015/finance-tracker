@@ -43,7 +43,8 @@ export class FinanceDataService {
       const success = await window.electron.saveExpenses(data);
       console.log("save successful?", success);
     } else {
-      console.log('[ng serve] Save is skipped (Electron only)');
+      this._expenses.update(() => data);
+      console.log('save successful', data);
     }  
   }
 
