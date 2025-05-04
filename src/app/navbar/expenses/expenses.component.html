@@ -1,7 +1,8 @@
 <div class="expenses">
   <div class="top-row">
-    <button mat-button (click)="toggleEdit()">{{editVerbiage}}
-      <mat-icon>{{ isEditable ? 'lock_open' : 'lock' }}</mat-icon>
+    <button mat-button (click)="toggleEditable()">
+      {{ editVerbiageComputedSignal() }}
+      <mat-icon>{{ isEditableSignal() ? 'lock_open' : 'lock' }}</mat-icon>
     </button>
   </div>
 
@@ -29,11 +30,11 @@
   </div>
   <div *ngFor="let category of categories" class="table">
     <div class="header">
-      <h3 class="category-header" *ngIf="!isEditable">{{ category.name }}</h3>
-      <mat-form-field *ngIf="isEditable" appearance="outline" class="category-header">
+      <h3 class="category-header" *ngIf="!isEditableSignal()">{{ category.name }}</h3>
+      <mat-form-field *ngIf="isEditableSignal()" appearance="outline" class="category-header">
         <input matInput [(ngModel)]="category.name" placeholder="Category Name" />
       </mat-form-field>
-      <button mat-raised-button *ngIf="isEditable" (click)="deleteCategory(category.id)">Delete Category
+      <button mat-raised-button *ngIf="isEditableSignal()" (click)="deleteCategory(category.id)">Delete Category
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -45,7 +46,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
-            <mat-icon *ngIf="isEditable" cdkDrag cdkDragHandle>reorder</mat-icon>
+            <mat-icon *ngIf="isEditableSignal()" cdkDrag cdkDragHandle>reorder</mat-icon>
           </td>
           <td mat-footer-cell *matFooterCellDef> </td>
         </ng-container>
@@ -55,7 +56,7 @@
           <th mat-header-cell *matHeaderCellDef>Subcategory</th>
           <td mat-cell *matCellDef="let row">
             <mat-form-field class="subcategory">
-              <input matInput [(ngModel)]="row.name" placeholder="Subcategory" [readonly]="!isEditable">
+              <input matInput [(ngModel)]="row.name" placeholder="Subcategory" [readonly]="!isEditableSignal()">
             </mat-form-field>
           </td>
           <td mat-footer-cell *matFooterCellDef> Total </td>
@@ -68,15 +69,15 @@
             <div class="clear-category">
               <mat-form-field class="amount">
                 <input matInput type="text" placeholder="Amount" [(ngModel)]="row.value"
-                  [name]="'value-' + category.id + '-' + row.id" [disabled]="isEditable"
+                  [name]="'value-' + category.id + '-' + row.id" [disabled]="isEditableSignal()"
                   (keypress)="allowOnlyNumbers($event)" (ngModelChange)="updateCategoryTotal(category)"
                   (blur)="saveInput(category.id, row.id, row.value)">
-                <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value && !isEditable"
+                <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value && !isEditableSignal()"
                   (click)="clearValue(category.id, row.id)">
                   <mat-icon>close</mat-icon>
                 </button>
               </mat-form-field>
-              <button *ngIf="isEditable" mat-icon-button color="warn" (click)="deleteRow(category.id, row.id)"
+              <button *ngIf="isEditableSignal()" mat-icon-button color="warn" (click)="deleteRow(category.id, row.id)"
                 class="delete">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -91,14 +92,14 @@
       </table>
     </div>
 
-    <button mat-button *ngIf="isEditable" (click)="addRow(category.id)">+ Add Row</button>
+    <button mat-button *ngIf="isEditableSignal()" (click)="addRow(category.id)">+ Add Row</button>
   </div>
 
   <div class="floating-buttons">
     <button class="new-category" mat-fab extended (click)="addCategory()">New Category
       <mat-icon>add</mat-icon>
     </button>
-    <button *ngIf="isEditable" class="submit" mat-fab extended (click)="saveChanges()">Submit
+    <button *ngIf="isEditableSignal()" class="submit" mat-fab extended (click)="saveChanges()">Submit
       <mat-icon>check</mat-icon>
     </button>
 

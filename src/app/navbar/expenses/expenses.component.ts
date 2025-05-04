@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
@@ -13,7 +13,6 @@ import { DefaultTemplateService } from '../../../core/services/default-template-
 })
 export class ExpensesComponent {
   displayedColumns: string[] = ['actions', 'name', 'value'];
-  isEditable = false;
   categories: CategoryBlock[] = [];
   defaultCategories: CategoryBlock[] = [];
   monthExpenses: MonthExpense[] = [];
@@ -23,8 +22,12 @@ export class ExpensesComponent {
   totalSpent = 10;
   totalSpentWithoutRecurring = 0;
 
-  get editVerbiage(): string {
-    return this.isEditable ? 'Lock Rows' : 'Unlock Rows';
+  isEditableSignal = signal(false);
+  
+  editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
+
+  toggleEditable(): void {
+    this.isEditableSignal.update(() => !this.isEditableSignal());
   }
 
   constructor(private financeDataService: FinanceDataService,
@@ -155,7 +158,7 @@ export class ExpensesComponent {
   }
 
   toggleEdit(): void {
-    this.isEditable = !this.isEditable;
+    this.isEditableSignal.update(() => !this.isEditableSignal());
   }
 
   updateCategoryTotal(category: CategoryBlock): void {
@@ -177,7 +180,7 @@ export class ExpensesComponent {
           recurring: false,
         }
       ] });
-    this.isEditable = true;
+    this.isEditableSignal.update(() => true);
   }
 
   deleteCategory(categoryId: string): void {
@@ -243,6 +246,6 @@ export class ExpensesComponent {
     console.log('Saving changes..total spent is: ', this.totalSpent);
     this.currentMonthExpense.totalSpent = this.totalSpent;
     this.financeDataService.save(this.monthExpenses);
-    this.isEditable = false;
+    this.isEditableSignal.update(() => false);
   }
 }
