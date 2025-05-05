@@ -1,13 +1,68 @@
-<mat-card class="container">
-  <h2>Income</h2>
-
-  <mat-form-field class="example-form-field">
-    <mat-label>How much did we save this month?</mat-label>
-    <input matInput type="text" >
-
-    <button matSuffix mat-icon-button>
-      <mat-icon>close</mat-icon>
+<div class="expenses">
+  <div class="month-selector">
+    <button class="chevron" mat-icon-button (click)="prevMonth()">
+      <mat-icon>chevron_left</mat-icon>
     </button>
+    <mat-form-field appearance="outline">
+      <mat-label>Select Year</mat-label>
+      <input matInput [matDatepicker]="picker" [value]="currentYear" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker    [startAt]="currentYear"
+        [startView]="'multi-year'" datepickerMode="month">
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput [matDatepicker]="dp" placeholder="Year" >
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp
+                      startView="multi-year"
+                      (yearSelected)="chosenYearHandler($event, dp)"
+                     
+                      panelClass="example-month-picker">
+      </mat-datepicker>
+    </mat-form-field>
+    <button class="chevron" mat-icon-button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>  
+  </div>
+  <h2> Income </h2>
+  <div class="month-header">
+  </div>
+  <div *ngFor="let monthIncome of totalIncome(); let i = index" class="table">
+    <div class="header">
+      <h3 class="category-header">{{getMonthNameSignal()[i].name}}</h3>
+    </div>
+    <div>
+      <table mat-table [dataSource]="monthIncome.income" [id]="monthIncome.id">
 
-  </mat-form-field>
-</mat-card>
+         <!-- Source Column -->
+         <ng-container matColumnDef="source">
+          <th mat-header-cell *matHeaderCellDef>Source</th>
+
+          <td mat-cell *matCellDef="let row">
+            <mat-form-field class="source">
+              <input matInput [(ngModel)]="row.source">
+            </mat-form-field>
+          </td>
+          <td mat-footer-cell *matFooterCellDef> Total </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-form-field class="source">
+              <input matInput [(ngModel)]="row.amount">
+            </mat-form-field>
+          </td>
+          <td mat-footer-cell *matFooterCellDef>{{ monthTotalSignal()[i].total | currency }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['source', 'amount']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['source', 'amount'];"></tr>
+        <tr mat-footer-row *matFooterRowDef="['amount'] sticky: true"></tr>
+      </table>
+    </div>
+
+  </div>
+</div>

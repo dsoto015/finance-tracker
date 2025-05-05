@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, Inject, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { FinanceDataService } from '../../../core/services/finance-data-service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
@@ -11,19 +11,20 @@ import { DefaultTemplateService } from '../../../core/services/default-template-
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss']
 })
+
+
 export class ExpensesComponent {
   displayedColumns: string[] = ['actions', 'name', 'value'];
   categories: CategoryBlock[] = [];
   defaultCategories: CategoryBlock[] = [];
   monthExpenses: MonthExpense[] = [];
-  currentMonthExpense: MonthExpense;
+  currentMonthExpense!: MonthExpense;
   selectedMonth: Date = new Date();
   currentMonthName: string = '';
   totalSpent = 10;
   totalSpentWithoutRecurring = 0;
 
   isEditableSignal = signal(false);
-  
   editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
 
   toggleEditable(): void {
@@ -32,7 +33,6 @@ export class ExpensesComponent {
 
   constructor(private financeDataService: FinanceDataService,
               private defaultTemplateService: DefaultTemplateService) {
-    this.currentMonthExpense = this.getCurrentMonthExpense();
   }
   
   async ngOnInit(): Promise<void> {
@@ -151,10 +151,10 @@ export class ExpensesComponent {
   
 
   allowOnlyNumbers(event: KeyboardEvent): void {
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
+    // const charCode = event.charCode;
+    // if (charCode < 48 || charCode > 57) {
+    //   event.preventDefault();
+    // }
   }
 
   toggleEdit(): void {
@@ -191,6 +191,7 @@ export class ExpensesComponent {
     categoryToDelete.rows.forEach(x => this.deleteRow(categoryId, x.id));
     this.updateTotalMonthSpent();
     this.categories = this.categories.filter(x => x.id !== categoryToDelete.id);
+    this.saveChanges();
   }
 
   onChosenMonth(normalizedMonth: Date, datepicker: any): void {

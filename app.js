@@ -9,6 +9,7 @@ let mainWindow;
 const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
 const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json');
 const fallbackDefaultsPath = path.join(__dirname, `public/mock-data/mock-default-categories.json`);
+const incomePath = path.join(app.getPath('userData'), 'income.json');
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -84,6 +85,30 @@ ipcMain.handle('save-defaults', async (_, data) => {
     return { success: true };
   } catch (error) {
     console.error('Error saving expenses:', error);
+    return { success: false, error };
+  }
+});
+
+ipcMain.handle('load-income', async () => {
+  try {
+    if (!fs.existsSync(incomePath)) {
+      fs.writeFileSync(incomePath, '[]');
+    }
+    const data = fs.readFileSync(incomePath, 'utf-8');
+    console.log('Saving income to:', incomePath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading income:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('save-income', async (_, data) => {
+  try {
+    fs.writeFileSync(incomePath, JSON.stringify(data, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving income:', error);
     return { success: false, error };
   }
 });

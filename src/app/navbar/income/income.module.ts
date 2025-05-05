@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 
 import { IncomeComponent } from './income.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTable, MatTableModule } from '@angular/material/table';
 
 
 @NgModule({
@@ -22,6 +24,8 @@ import { IncomeComponent } from './income.component';
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
+    MatTableModule,
+    MatDatepickerModule,     
     FormsModule
   ],
   exports: [IncomeComponent]

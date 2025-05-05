@@ -1,0 +1,59 @@
+[
+    {
+      "id": "1",
+      "month": 4,
+      "year": 2025,
+      "income": [
+        {
+          "source": "Dom",
+          "amount": 6000
+        },
+        {
+          "source": "Lacey VESD",
+          "amount": 5000
+        },
+        {
+          "source": "Lacey Laguna",
+          "amount": 800
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "month": 5,
+      "year": 2025,
+      "income": [
+        {
+          "source": "Dom",
+          "amount": 6000
+        },
+        {
+          "source": "Lacey VESD",
+          "amount": 5000
+        },
+        {
+          "source": "Lacey Laguna",
+          "amount": 800
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "month": 6,
+      "year": 2025,
+      "income": [
+        {
+          "source": "Dom",
+          "amount": 6000
+        },
+        {
+          "source": "Lacey VESD",
+          "amount": 5000
+        },
+        {
+          "source": "Lacey Laguna",
+          "amount": 800
+        }
+      ]
+    }
+  ]
