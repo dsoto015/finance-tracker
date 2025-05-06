@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { IncomeService } from '../../../core/services/income.service';
-import { Income } from '../../../core/models/income.model';
+import { Income, MonthIncome } from '../../../core/models/income.model';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
   styleUrl: './income.component.scss'
 })
 export class IncomeComponent {
+
 
   totalIncome = signal<Income[]>([]);
   date: Date = new Date();
@@ -21,10 +22,24 @@ export class IncomeComponent {
     }))
   );
 
-  monthTotalSignal = computed(() =>
-    this.totalIncome().map((monthIncome) => ({
+  monthTotalSignal = computed(() =>{
+    console.log('getMonthNameSignal recomputed');
+    return this.totalIncome().map((monthIncome) => ({
       total: monthIncome.income.reduce((sum, entry) => sum + (entry.amount || 0), 0),
     }))
+  }
+  );
+
+  //year to date computed signal that adds all all the totals of the months in the year
+  yearToDateTotalSignal = computed(() => {
+    console.log('yearToDateSignal recomputed');
+    return this.totalIncome().reduce((sum, monthIncome) => {
+      if (monthIncome.year === this.currentYear) {
+        return sum + monthIncome.income.reduce((monthSum, entry) => monthSum + (entry.amount || 0), 0);
+      }
+      return sum;
+    }, 0);
+  }
   );
 
   constructor(private incomeService: IncomeService,) {
@@ -85,5 +100,24 @@ export class IncomeComponent {
 
   saveChanges(): void {
     console.log('Saving changes..');
+  }
+
+  updateTotalAmount(rowAmount: number, monthId: string, rowIndex: number): void {
+    rowAmount = Number(rowAmount);
+    const updatedIncome = this.totalIncome().map((monthIncome) => {
+      if (monthIncome.id === monthId) {
+        return {
+          ...monthIncome,
+          income: monthIncome.income.map((entry, index) =>
+            index === rowIndex
+              ? { ...entry, amount: rowAmount } 
+              : entry 
+          ),
+        };
+      }
+      return monthIncome; 
+    });
+  
+    this.totalIncome.update(() => updatedIncome);
   }
 }
