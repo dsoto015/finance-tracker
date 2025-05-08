@@ -1,4 +1,37 @@
-mat-card {
-    margin: 50px;
-    padding: 30px;
+.income {
+    margin: 0px 50px;
+
+    .yearpicker {
+        margin: 20px 0px -10px 0px;
+    }
+
+    .income-table {
+        padding: 0px 50px;
+        .header {
+            display: flex;
+            align-items: center;
+        }
+
+        .month-table {
+            .source-row {   
+            }
+
+            .cell-row {
+                
+                .cell-source {
+                    display: flex;
+                    flex-direction: row;
+                    margin: 10px;
+                    width: 50%;
+                }
+
+                .cell-amount {
+                    display: flex;
+                    flex-direction: row;          
+                    margin: 10px;
+                    width: 20%;
+                }
+            }
+        }
+    }
 }

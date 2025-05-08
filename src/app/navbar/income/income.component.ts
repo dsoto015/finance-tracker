@@ -16,6 +16,11 @@ export class IncomeComponent {
   date: Date = new Date();
   currentYear: Number = new Date().getFullYear();
 
+  selectedYear = computed(() => {
+    console.log('selectedYear recomputed');
+    return this.date.getFullYear();
+  });
+
   getMonthNameSignal = computed(() => 
     this.totalIncome().map((monthIncome) => ({
       name: new Date(monthIncome.year, monthIncome.month - 1).toLocaleDateString('default', { month: 'long' })
