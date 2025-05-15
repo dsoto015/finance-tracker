@@ -37,7 +37,7 @@ export class ExpensesComponent {
   
   async ngOnInit(): Promise<void> {
     this.monthExpenses = await this.financeDataService.loadExpenses() as MonthExpense[];
-    this.defaultCategories = await this.defaultTemplateService.loadDefaults() as CategoryBlock[]
+    this.defaultCategories = await this.defaultTemplateService.loadDefaultExpenses() as CategoryBlock[]
     this.currentMonthExpense = this.getCurrentMonthExpense();
     this.currentMonthName = this.getMonthName(this.selectedMonth);
     this.updateTotalMonthSpent();

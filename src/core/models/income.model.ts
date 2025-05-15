@@ -1,11 +1,16 @@
-export interface Income {
+export interface YearIncome {
   id: string;
-  month: number;
   year: number;
-  income: MonthIncome[];
+  monthIncome: MonthIncome[];
 }
 
 export interface MonthIncome {
-  source: string;
-  amount: number;
+  id: string,
+  month: number,
+  income: Income[]
+}
+
+export interface Income {
+  source: string, 
+  amount: number
 }

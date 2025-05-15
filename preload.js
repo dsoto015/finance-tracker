@@ -6,4 +6,6 @@ contextBridge.exposeInMainWorld('electron', {
   loadDefaults: () => ipcRenderer.invoke('load-defaults'),
   saveDefaults: (data) => ipcRenderer.invoke('save-defaults', data),
   loadIncome: () => ipcRenderer.invoke('load-income'),
+  loadIncomeDefaultSources: () => ipcRenderer.invoke('load-income-default-sources'),
+  saveIncome: (data) => ipcRenderer.invoke('save-income', data),
 });

@@ -7,15 +7,30 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IncomeComponent } from './income.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatTable, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
+import { MAT_DATE_FORMATS, MatDateFormats, MatNativeDateModule } from '@angular/material/core';
 
+export const YEAR_ONLY_DATE_FORMATS: MatDateFormats = {
+  parse: {
+    dateInput: { year: 'numeric' }, 
+  },
+  display: {
+    dateInput: { year: 'numeric' }, 
+    monthYearLabel: { year: 'numeric' },
+    dateA11yLabel: { year: 'numeric' }, 
+    monthYearA11yLabel: { year: 'numeric' },
+  },
+};
 
 @NgModule({
   declarations: [IncomeComponent],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_DATE_FORMATS }
+  ],
   imports: [
     CommonModule,
     MatSlideToggleModule,
@@ -26,7 +41,9 @@ import { MatTable, MatTableModule } from '@angular/material/table';
     MatIconModule,
     MatTableModule,
     MatDatepickerModule,     
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    MatNativeDateModule
   ],
   exports: [IncomeComponent]
 })

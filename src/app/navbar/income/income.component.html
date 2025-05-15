@@ -1,31 +1,34 @@
 <div class="income">
   <div class="month-selector">
-    <button class="chevron" mat-icon-button (click)="prevMonth()">
+    <button class="chevron" mat-icon-button (click)="previousYear()">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <mat-form-field class="yearpicker" appearance="outline">
-      <input matInput [matDatepicker]="picker" placeholder="Year" [value]="selectedYear" >
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker
+    <mat-form-field>
+      <input
+      matInput
+      [matDatepicker]="dp"
+      placeholder="Year"
+      [(ngModel)]="date"  />
+      <mat-datepicker-toggle matSuffix [for]="dp"/>
+      <mat-datepicker #dp
                       startView="multi-year"
-                      (yearSelected)="chosenYearHandler($event, picker)">
+                      (yearSelected)="chosenYearHandler($event, dp)">
       </mat-datepicker>
     </mat-form-field>
-    <button class="chevron" mat-icon-button (click)="nextMonth()">
+    <button class="chevron" mat-icon-button (click)="nextYear()">
       <mat-icon>chevron_right</mat-icon>
     </button>  
   </div>
-  <h2> Income </h2>
-  <h3>total net so far: {{yearToDateTotalSignal() | currency}} </h3>
+  <h2> Income for {{currentYear()}}</h2>
+  <h3>Net YTD: {{yearToDateTotal() | currency}} </h3>
   <div class="month-header">
   </div>
-  <div class="income-table" *ngFor="let monthIncome of totalIncome(); let i = index" >
+  <div class="income-table" *ngFor="let month of monthIncome(); let i = index" >
     <div class="header">
       <h3 class="category-header">{{getMonthNameSignal()[i].name}}</h3>
     </div>
     <div>
-      <table class="month-table" mat-table [dataSource]="monthIncome.income" [id]="monthIncome.id">
-
+      <table class="month-table" mat-table [dataSource]="month.income" [id]="month">
          <!-- Source Column -->
          <ng-container matColumnDef="source">
           <th mat-header-cell *matHeaderCellDef>Source</th>
@@ -43,7 +46,7 @@
           <th mat-header-cell *matHeaderCellDef>Amount</th>
           <td mat-cell *matCellDef="let row; let rowIndex = index">
             <mat-form-field class="cell-amount">
-              <input matInput [(ngModel)]="row.amount" (blur)="updateTotalAmount(row.amount, monthIncome.id, rowIndex)">
+              <input matInput [(ngModel)]="row.amount" (change)="updateTotalAmount(row.amount, month.month, rowIndex)">
             </mat-form-field>
           </td>
           <td mat-footer-cell *matFooterCellDef>{{ monthTotalSignal()[i].total | currency }}</td>
@@ -51,7 +54,7 @@
 
         <tr class="source-row" mat-header-row *matHeaderRowDef="['source', 'amount']"></tr>
         <tr class="cell-row" mat-row *matRowDef="let row; columns: ['source', 'amount'];"></tr>
-        <tr mat-footer-row *matFooterRowDef="['amount'] sticky: true"></tr>
+        <tr mat-footer-row *matFooterRowDef="['source', 'amount'] sticky: true"></tr>
       </table>
     </div>
 

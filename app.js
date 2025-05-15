@@ -10,6 +10,7 @@ const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
 const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json');
 const fallbackDefaultsPath = path.join(__dirname, `public/mock-data/mock-default-categories.json`);
 const incomePath = path.join(app.getPath('userData'), 'income.json');
+const incomeSourcesPath = path.join(app.getPath('userData'), 'income-sources.json');
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -30,7 +31,7 @@ function createWindow() {
     })
   );
 
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -95,7 +96,7 @@ ipcMain.handle('load-income', async () => {
       fs.writeFileSync(incomePath, '[]');
     }
     const data = fs.readFileSync(incomePath, 'utf-8');
-    console.log('Saving income to:', incomePath);
+    console.log('loading income from:', incomePath);
     return JSON.parse(data);
   } catch (error) {
     console.error('Error loading income:', error);
@@ -110,6 +111,20 @@ ipcMain.handle('save-income', async (_, data) => {
   } catch (error) {
     console.error('Error saving income:', error);
     return { success: false, error };
+  }
+});
+
+ipcMain.handle('load-income-default-sources', async () => {
+  try {
+    if (!fs.existsSync(incomeSourcesPath)) {
+      fs.writeFileSync(incomeSourcesPath, '[]');
+    }
+    const data = fs.readFileSync(incomeSourcesPath, 'utf-8');
+    console.log('loading income sources from:', incomeSourcesPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading income:', error);
+    return [];
   }
 });
 
