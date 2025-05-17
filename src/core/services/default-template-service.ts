@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { ElectronService } from './electron-service';
 import { HttpClient } from '@angular/common/http';
 import { CategoryBlock, MonthExpense } from '../models/expenses.model';
-import { YearIncome } from '../models/income.model';
+import { Income, YearIncome } from '../models/income.model';
 
 @Injectable({ providedIn: 'root' })
 export class DefaultTemplateService {
@@ -45,37 +45,24 @@ export class DefaultTemplateService {
     return data;
   }
 
-  async loadDefaultIncomeSources(): Promise<YearIncome> {
+  async loadDefaultIncomeSources(): Promise<Income[]> {
     const isElectron = !!window?.electron?.loadExpenses;
-    let data: YearIncome;
+    let data: Income[];
     if (isElectron) {
         data = await window.electron.loadDefaults() ?? [];        
     } else {
       console.log('[ng serve] Loading mock expenses');
       try {
         const result = await this.http
-          .get<YearIncome>('/mock-data/mock-income-sources.json')
+          .get<[]>('/mock-data/mock-income-sources.json')
           .toPromise();  
-        data = result ?? {} as YearIncome;
+        data = result ?? [];
       } catch (err) {
         console.warn('Failed to load mock data, using empty array');
-        data = {} as YearIncome;
+        data = [];
       }
     }
-
-    // data = data.map(x => ({
-    //   id: uuid(),
-    //   name: category.name,
-    //   rows: category.rows.map((row, rowIndex) => ({
-    //     id: uuid(),
-    //     name: row.name,
-    //     value: row.value ?? null,
-    //     order: rowIndex,
-    //     recurring: row.recurring ?? false
-    //   }))
-
-    // }));
-    // console.log("service returned: ", data);
+    
     return data;
   }
 

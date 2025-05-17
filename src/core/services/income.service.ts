@@ -1,22 +1,29 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { ElectronService } from './electron-service';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { MonthExpense } from '../models/expenses.model';
 import { HttpClient } from '@angular/common/http';
-import { YearIncome } from '../models/income.model';
+import { Income, YearIncome } from '../models/income.model';
 import { v4 as uuid } from 'uuid';
+import { DefaultTemplateService } from './default-template-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IncomeService {
-  private _totalIncome = signal<YearIncome[]>([]);
-  readonly totalIncome = computed(() => this._totalIncome());
+  private defaultTemplateService = inject(DefaultTemplateService);
 
-  constructor(private electron: ElectronService, private http: HttpClient) {
+  private _totalIncomeSignal = signal<YearIncome[]>([]);
+  readonly totalIncomeSignal = computed(() => this._totalIncomeSignal());
+
+  defaultSources: Income[] = [];
+
+  constructor(private http: HttpClient) {
     this.loadIncome();
   }
 
   async loadIncome(): Promise<YearIncome[]> {
+    this.defaultSources = await this.defaultTemplateService.loadDefaultIncomeSources();
+    this.defaultSources.map((income) => income.amount = 0);
+    
     const isElectron = !!window?.electron?.loadIncome;
     let data = [];
 
@@ -35,10 +42,60 @@ export class IncomeService {
         data =[];
       }
     }
-    this._totalIncome.set(data);
-    this.fillMissingMonths(2025);
-    
+
+    this._totalIncomeSignal.set(data);    
+    let currentYear = new Date().getFullYear();
+    this.fillMissingMonths(currentYear);
     return data;
+  }
+
+  updateIncome(year: number, rowAmount: number, monthId: string, rowIndex: number): void {
+    const updated = this._totalIncomeSignal().map(yearIncome => {
+      if (yearIncome.year !== year) return yearIncome;
+      return {
+        ...yearIncome,
+        monthIncome: yearIncome.monthIncome.map((month, idx) => {
+          if (month.id !== monthId) return month;
+          if (idx === rowIndex) {
+            return { ...month, amount: rowAmount };
+          }
+          return month;
+        })
+      };
+    });
+
+    this._totalIncomeSignal.update(() => updated);
+    this.save(updated);
+  }  
+
+  fillMissingMonths(year: number): void {
+    const current = this._totalIncomeSignal();
+
+    let yearIncome = current.find(y => y.year === year);
+
+    if (!yearIncome) {
+      yearIncome = {
+        id: uuid(),
+        year,
+        monthIncome: []
+      };
+      current.push(yearIncome);
+    }
+
+    const existingMonths = new Set(yearIncome.monthIncome.map(m => m.month));
+      
+    for (let m = 0; m < 12; m++) {
+      if (!existingMonths.has(m)) {
+        yearIncome.monthIncome.push({
+          id: uuid(),
+          month: m,
+          income: this.defaultSources.map(x => ({ ...x }))
+        });
+      }
+    }
+
+    yearIncome.monthIncome.sort((a, b) => a.month - b.month);
+    this._totalIncomeSignal.update(() => ([...current]));
   }
 
   async save(data: YearIncome[]): Promise<void> {
@@ -46,82 +103,8 @@ export class IncomeService {
       const success = await window.electron.saveIncome(data);
       console.log("save successful?", success);
     } else {
-      this._totalIncome.update(() => data);
+      this._totalIncomeSignal.update(() => data);
       console.log('save successful', data);
     }
-  }
-
-  updateIncome(rowAmount: number, monthId: number, rowIndex: number): void {
-    // const updatedIncome = this._totalIncome().monthIncome.map((monthIncome) => {
-    //   if (monthIncome.month === monthId) {
-    //     return {
-    //       ...monthIncome,
-    //       monthIncome: monthIncome.map((entry, index) =>
-    //         index === rowIndex
-    //           ? { ...entry, amount: Number(rowAmount || 0) }
-    //           : entry
-    //       ),
-    //     };
-    //   }
-    //   return monthIncome;
-    // });
-
-    // this._totalIncome.update(() => updatedIncome); // Update the signal
-    // this.save(this.totalIncome()); // Persist the changes
-  }
-
-  fillMissingMonths(year: number): void {
-    // const currentIncome = this._totalIncome();
-
-    // // Filter income data for the given year
-    // const yearIncome = currentIncome.filter((monthIncome) => monthIncome.year === year);
-    // console.log("fillMissingMonths for ", year);
-    // if (yearIncome.length === 0) {
-      
-    //   // If no months exist for the year, generate a full blank year
-    //   const defaultIncome: Income[] = Array.from({ length: 12 }, (_, i) => ({
-    //     id: uuid(),
-    //     month: i + 1,
-    //     year: year,
-    //     income: [
-    //       { source: 'Source 1', amount: 0 },
-    //       { source: 'Source 2', amount: 0 },
-    //     ],
-    //   }));
-    //   console.log("whole year didn't exist, adding default data: ", defaultIncome);
-    //   // Replace the signal with the new year data
-    //   this._totalIncome.update((currentIncome) => [
-    //     ...currentIncome.filter((monthIncome) => monthIncome.year !== year), // Remove any existing data for the year
-    //     ...defaultIncome,
-    //   ]);
-    //   return;
-    // }
-
-    // // If some months exist, find the missing months
-    // const existingMonths = new Set(yearIncome.map((monthIncome) => monthIncome.month));
-    // const missingMonths = Array.from({ length: 12 }, (_, i) => i + 1).filter((month) => !existingMonths.has(month));
-
-    // // Generate default data for the missing months
-    // const defaultIncome: Income[] = missingMonths.map((month) => ({
-    //   id: `${year}-${month}`, // Unique ID based on year and month
-    //   month: month,
-    //   year: year,
-    //   income: [
-    //     { source: 'Source 1', amount: 0 },
-    //     { source: 'Source 2', amount: 0 },
-    //   ],
-    // }));
-
-    // if (defaultIncome.length > 0) {
-    //   this._totalIncome.update((currentIncome) => [
-    //     ...currentIncome, // Keep existing data
-    //     ...defaultIncome.filter((newMonth) =>
-    //       !currentIncome.some(
-    //         (existingMonth) =>
-    //           existingMonth.year === newMonth.year && existingMonth.month === newMonth.month
-    //       )
-    //     ), // Only add truly missing months
-    //   ]);
-    // }
   }
 }
