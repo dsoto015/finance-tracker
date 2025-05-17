@@ -51,20 +51,22 @@ export class IncomeComponent {
   );
 
   readonly monthTotalSignal = computed(() => {
-    0
-    // const totals: Record<number, number> = {};
-    // for (const entry of this.monthIncome()) {
-    //   const m = entry.month;
-    //   totals[m] = (totals[m] || 0) + (entry.amount || 0);
-    // }
-    // return Array.from({ length: 12 }, (_, i) => ({
-    //   month: i,
-    //   total: totals[i] || 0
-    // }));
+    return this.monthIncome().map(month => {
+      const total = month.income
+        .reduce((sum, x) => sum + +x.amount, 0);
+      return {
+        ...month,
+        total
+      };
+    });
   });
 
   readonly yearToDateTotal = computed(() =>
-     this.monthIncome(). .reduce((sum, e) => sum + (e.amount || 0), 0)
+     {
+      let totalYtd = this.monthTotalSignal().reduce((sum, x) => sum +  +x.total, 0);
+      console.log('total: ', totalYtd);
+      return totalYtd;
+     }
   );
 
   ngOnInit(): void {
@@ -95,6 +97,7 @@ export class IncomeComponent {
   }
 
   updateTotalAmount(rowAmount: number, monthId: number, rowIndex: number): void {
+    console.log('recompute');
     this.incomeService.updateIncome(rowAmount, monthId, rowIndex);
   }
 }
