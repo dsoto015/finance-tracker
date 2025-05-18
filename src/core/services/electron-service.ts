@@ -9,7 +9,7 @@ declare global {
       saveDefaults: (data: any) => Promise<{ success: boolean }>;
       loadIncome: () => Promise<any>;
       saveIncome: (data: any) => Promise<{ success: boolean }>;
-      loadIncomeSources: () => Promise<any>;
+      loadIncomeDefaultSources: () => Promise<any>;
     };
   }
 }
@@ -40,7 +40,7 @@ export class ElectronService {
     return window.electron?.saveIncome(data) ?? Promise.resolve({ success: false });
   }
 
-  loadIncomeSources(): Promise<any> {
-    return window.electron?.loadIncomeSources() ?? Promise.resolve([]);
+  loadIncomeDefaultSources(): Promise<any> {
+    return window.electron?.loadIncomeDefaultSources() ?? Promise.resolve([]);
   }
 }

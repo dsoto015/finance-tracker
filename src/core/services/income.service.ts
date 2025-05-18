@@ -98,6 +98,40 @@ export class IncomeService {
     this._totalIncomeSignal.update(() => ([...current]));
   }
 
+  addRow(year: number, monthId: string) {
+    const updated = this._totalIncomeSignal().map(yearIncome => {
+      if (yearIncome.year !== year) return yearIncome;
+      return {
+        ...yearIncome,
+        monthIncome: yearIncome.monthIncome.map((month) => {
+          if (month.id !== monthId) return month;
+          const newIncome = [...month.income, { source: 'Source', amount: 0 } as Income];
+          return { ...month, income: newIncome };
+        })
+      };
+    });
+
+    this._totalIncomeSignal.update(() => updated);
+    this.save(updated);
+  }
+
+  removeRow(year: number, monthId: string, rowIndex: number) {
+    const updated = this._totalIncomeSignal().map(yearIncome => {
+      if (yearIncome.year !== year) return yearIncome;
+      return {
+        ...yearIncome,
+        monthIncome: yearIncome.monthIncome.map((month) => {
+          if (month.id !== monthId) return month;
+        const newIncome = month.income.filter((_, idx) => idx !== rowIndex);
+          return { ...month, income: newIncome };
+        })
+      };
+    });
+
+    this._totalIncomeSignal.update(() => updated);
+    this.save(updated);  
+  }  
+
   async save(data: YearIncome[]): Promise<void> {
     if (window?.electron?.saveIncome) {
       const success = await window.electron.saveIncome(data);

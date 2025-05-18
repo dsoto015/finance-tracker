@@ -11,6 +11,7 @@ const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json
 const fallbackDefaultsPath = path.join(__dirname, `public/mock-data/mock-default-categories.json`);
 const incomePath = path.join(app.getPath('userData'), 'income.json');
 const incomeSourcesPath = path.join(app.getPath('userData'), 'income-sources.json');
+const fallbackDefaultIncomePath = path.join(__dirname, `public/mock-data/mock-income-sources.json`);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -80,6 +81,24 @@ ipcMain.handle('load-defaults', async () => {
   }
 });
 
+ipcMain.handle('load-income-default-sources', async () => {
+  try {
+    if (!fs.existsSync(incomeSourcesPath)) {
+      console.log('income source didnt exist, reading from ', fallbackDefaultIncomePath);
+      const data = fs.readFileSync(fallbackDefaultIncomePath, 'utf-8');
+      fs.writeFileSync(incomeSourcesPath, data);
+      console.log('wrote to ', incomeSourcesPath);
+    }
+
+    const data = fs.readFileSync(incomeSourcesPath, 'utf-8');
+    console.log('loading income sources from:', incomeSourcesPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading income:', error);
+    return [];
+  }
+});
+
 ipcMain.handle('save-defaults', async (_, data) => {
   try {
     fs.writeFileSync(defaultsPath, JSON.stringify(data, null, 2));
@@ -114,19 +133,7 @@ ipcMain.handle('save-income', async (_, data) => {
   }
 });
 
-ipcMain.handle('load-income-default-sources', async () => {
-  try {
-    if (!fs.existsSync(incomeSourcesPath)) {
-      fs.writeFileSync(incomeSourcesPath, '[]');
-    }
-    const data = fs.readFileSync(incomeSourcesPath, 'utf-8');
-    console.log('loading income sources from:', incomeSourcesPath);
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error loading income:', error);
-    return [];
-  }
-});
+
 
 
 app.on('ready', createWindow);

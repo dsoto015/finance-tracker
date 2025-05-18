@@ -46,10 +46,10 @@ export class DefaultTemplateService {
   }
 
   async loadDefaultIncomeSources(): Promise<Income[]> {
-    const isElectron = !!window?.electron?.loadExpenses;
+    const isElectron = !!window?.electron?.loadIncomeDefaultSources;
     let data: Income[];
     if (isElectron) {
-        data = await window.electron.loadDefaults() ?? [];        
+        data = await window.electron.loadIncomeDefaultSources() ?? [];        
     } else {
       console.log('[ng serve] Loading mock expenses');
       try {

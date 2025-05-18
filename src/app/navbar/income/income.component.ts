@@ -9,10 +9,16 @@ import { YearIncome, MonthIncome } from '../../../core/models/income.model';
   styleUrl: './income.component.scss'
 })
 export class IncomeComponent {
-  private incomeService = inject(IncomeService);
-  date = signal(new Date());
 
-  
+  isEditableSignal = signal(false);
+  editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
+
+  toggleEditable(): void {
+    this.isEditableSignal.update(() => !this.isEditableSignal());
+  }
+
+  private incomeService = inject(IncomeService);
+  date = signal(new Date()); 
 
   readonly currentYearSignal = computed(() => 
     this.date().getFullYear()
@@ -56,7 +62,6 @@ export class IncomeComponent {
 
   nextYear(): void {
     this.loadYear(this.currentYearSignal() + 1);
-
   }
 
   previousYear(): void {
@@ -76,4 +81,13 @@ export class IncomeComponent {
     console.log('recompute');
     this.incomeService.updateIncome(this.currentYearSignal(), rowAmount, monthId, rowIndex);
   }
+  
+  addRow(monthId: string) {
+    this.incomeService.addRow(this.currentYearSignal(), monthId);
+    this.isEditableSignal.update(() => false)
+  }
+
+  deleteRow(monthId: string, rowIndex: number) {
+    this.incomeService.removeRow(this.currentYearSignal(), monthId, rowIndex);
+    this.isEditableSignal.update(() => false)  }
 }
