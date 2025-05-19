@@ -1,6 +1,6 @@
 import { Component, computed, Inject, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
-import { FinanceDataService } from '../../../core/services/finance-data-service';
+import { ExpenseService } from '../../../core/services/expense.service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DefaultTemplateService } from '../../../core/services/default-template-service';
@@ -31,12 +31,12 @@ export class ExpensesComponent {
     this.isEditableSignal.update(() => !this.isEditableSignal());
   }
 
-  constructor(private financeDataService: FinanceDataService,
+  constructor(private expenseService: ExpenseService,
               private defaultTemplateService: DefaultTemplateService) {
   }
   
   async ngOnInit(): Promise<void> {
-    this.monthExpenses = await this.financeDataService.loadExpenses() as MonthExpense[];
+    this.monthExpenses = await this.expenseService.loadExpenses() as MonthExpense[];
     this.defaultCategories = await this.defaultTemplateService.loadDefaultExpenses() as CategoryBlock[]
     this.currentMonthExpense = this.getCurrentMonthExpense();
     this.currentMonthName = this.getMonthName(this.selectedMonth);
@@ -246,7 +246,7 @@ export class ExpensesComponent {
   saveChanges(): void {
     console.log('Saving changes..total spent is: ', this.totalSpent);
     this.currentMonthExpense.totalSpent = this.totalSpent;
-    this.financeDataService.save(this.monthExpenses);
+    this.expenseService.save(this.monthExpenses);
     this.isEditableSignal.update(() => false);
   }
 }

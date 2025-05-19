@@ -1,6 +1,52 @@
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Spending Summary</mat-card-title>
-        <mat-card-subtitle>Total spent per month</mat-card-subtitle>
-    </mat-card-header>
-</mat-card>
+<div class="summary">
+       <div class="month-selector">
+      <button class="chevron" mat-icon-button (click)="previousYear()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <mat-form-field class="year-picker">
+        <input matInput [matDatepicker]="dp" placeholder="Year" [(ngModel)]="date" />
+        <mat-datepicker-toggle matSuffix [for]="dp" />
+        <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event, dp)">
+        </mat-datepicker>
+      </mat-form-field>
+      <button class="chevron" mat-icon-button (click)="nextYear()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Spending Summary</mat-card-title>
+            <mat-card-subtitle>Total spent per month</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <canvas baseChart 
+                    [data]="barChartDataSignal()" 
+                    [options]="barChartOptions" 
+                    [type]="barChartType">
+            </canvas>
+        </mat-card-content>
+    </mat-card>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Income</mat-card-title>
+            <mat-card-subtitle>How much we made</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <canvas
+            baseChart
+            [data]="lineChartDataSignal()"
+            [options]="lineChartOptions"
+            [type]="lineChartType">
+            </canvas>
+        </mat-card-content>        
+    </mat-card>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Expenses</mat-card-title>
+            <mat-card-subtitle>How much we spent :(</mat-card-subtitle>
+        </mat-card-header>
+    </mat-card>
+    <button (click)="load()">
+        test
+    </button>
+</div>

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class FinanceDataService {
+export class ExpenseService {
   private _expenses = signal<MonthExpense[]>([]);
   readonly expenses = computed(() => this._expenses());
 
@@ -47,21 +47,4 @@ export class FinanceDataService {
       console.log('save successful', data);
     }  
   }
-
-  // setExpenses(data: any) {
-  //   this._expenses.set(data);
-  //   this.save(data);
-  // }
-
-  // addExpense(month: MonthExpense) {
-  //   const updated = [...this._expenses(), month];
-  //   this._expenses.set(updated);
-  //   this.save(month);
-  // }
-
-  // removeExpense(index: number) {
-  //   const updated = this._expenses().filter((_, i) => i !== index);
-  //   this._expenses.set(updated);
-  //   this.save(index);
-  // }
 }
