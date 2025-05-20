@@ -2,7 +2,9 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { IncomeService } from '../../../core/services/income.service';
 import { ExpenseService } from '../../../core/services/expense.service';
 import { YearIncome } from '../../../core/models/income.model';
-import { ChartConfiguration, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartType, Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+Chart.register(ChartDataLabels);
 
 @Component({
   selector: 'app-summary',
@@ -101,7 +103,8 @@ export class SummaryComponent {
   readonly barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     plugins: {
-      legend: { display: true }
+      legend: { display: true },
+      datalabels: { display: false }
     }
   };
 
@@ -123,11 +126,102 @@ export class SummaryComponent {
   readonly lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     plugins: {
-      legend: { display: true }
+      legend: { display: true },
+      datalabels: { display: false }
+
     }
   };
 
   readonly lineChartType: 'line' = 'line';
+
+
+  // Pie chart for expenses by category (year view)
+  readonly pieChartDataYearSignal = computed(() => {
+    const year = this.currentYearSignal();
+    const expenses = this.expensesSignal();
+    const categoryTotals: { [name: string]: number } = {};
+
+    expenses
+    .filter(e => e.year === year)
+    .forEach(e => {
+      e.categories.forEach(cat => {
+        // Sum only non-recurring rows in this category
+        const nonRecurringTotal = (cat.rows ?? [])
+          .filter(row => !row.recurring)
+          .reduce((sum, row) => sum + (Number(row.value) || 0), 0);
+        categoryTotals[cat.name] = (categoryTotals[cat.name] || 0) + nonRecurringTotal;
+      });
+    });
+
+    // Show top 6 categories, group the rest as "Other"
+    const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+    const top = sorted.slice(0, 6);
+    const otherTotal = sorted.slice(6).reduce((sum, [, v]) => sum + v, 0);
+
+    const labels = top.map(([name]) => name);
+    const data = top.map(([, value]) => value);
+
+    if (otherTotal > 0) {
+      labels.push('Other');
+      data.push(otherTotal);
+    }
+
+    return {
+      labels,
+      datasets: [{ data }]
+    };
+  });
+
+  readonly selectedMonthSignal = signal<number | null>(1);
+
+  readonly pieChartDataMonthSignal = computed(() => {
+    const year = this.currentYearSignal();
+    const month = this.selectedMonthSignal();
+    if (month === null) return { labels: [], datasets: [{ data: [] }] };
+
+    const expenses = this.expensesSignal();
+    const monthExpense = expenses.find(e => e.year === year && e.month === month);
+    if (!monthExpense) return { labels: [], datasets: [{ data: [] }] };
+
+    const categoryTotals: { [name: string]: number } = {};
+    monthExpense.categories.forEach(cat => {
+      categoryTotals[cat.name] = (categoryTotals[cat.name] || 0) + (cat.total || 0);
+    });
+
+    const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+    const top = sorted.slice(0, 6);
+    const otherTotal = sorted.slice(6).reduce((sum, [, v]) => sum + v, 0);
+
+    const labels = top.map(([name]) => name);
+    const data = top.map(([, value]) => value);
+
+    if (otherTotal > 0) {
+      labels.push('Other');
+      data.push(otherTotal);
+    }
+
+    return {
+      labels,
+      datasets: [{ data }]
+    };
+  });
+
+  // Pie chart options and type
+  readonly pieChartOptions: ChartConfiguration<'pie'>['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+      datalabels: {
+        color: '#333',
+        formatter: (value, context) => {
+          const label = context.chart.data.labels?.[context.dataIndex] || '';
+          return `${label}: ${value}`;
+        },
+        font: { weight: 'bold' }
+      }
+    }
+  };
+  readonly pieChartType: 'pie' = 'pie';
 
   chosenYearHandler(normalizedYear: Date, datepicker: any): void {
     const newDate = new Date(normalizedYear.getFullYear(), 0, 1);

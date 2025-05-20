@@ -1,12 +1,26 @@
 .summary {
     margin: 20px 50px;
+    align-items: center;
+    justify-content: center;
+    display: grid;
 
     mat-card.mat-mdc-card {
         margin: 20px 0px;
         padding: 10px;
+        width: 100vh;
     }
 
     mat-card-header.mat-mdc-card-header {
         padding: 10px;
+    }
+
+    mat-card-content {
+        justify-content: center;
+    }
+
+    .chart-content {
+        padding: 0px 100px;
+        align-items: center;
+        justify-content: center;
     }
 }

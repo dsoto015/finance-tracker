@@ -9,6 +9,9 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelectionListChange } from '@angular/material/list';
 
 
 @NgModule({
@@ -30,7 +33,9 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    MatOption,
+    MatSelectModule
   ],
   exports: [SummaryComponent]
 })

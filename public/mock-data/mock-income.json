@@ -3,125 +3,36 @@
     "id": "46255359-5c03-4c15-9080-a643df6a7e21",
     "year": 2024,
     "monthIncome": [
-      {
-        "id": "5fe3e519-b304-4e3d-b648-7278d5f45522",
-        "month": 0,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 6000
-          },
-          {
-            "source": "Source 2",
-            "amount": 3000
-          }
-        ]
-        
-      },
-      {
-        "id": "d5a5b6fa-fbec-4729-b579-060625ba2989",
-        "month": 1,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 7000
-          },
-          {
-            "source": "Source 2",
-            "amount": 2000
-          }
-        ]
-      },
-      {
-        "id": "d5a5b6fa-fbec-4729-b579-060625ba29123",      
-        "month": 2,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 2000
-          },
-          {
-            "source": "Source 2",
-            "amount": 4021
-          }
-        ]
-      }
+      { "id": "2024-0", "month": 0, "income": [ { "source": "Source 1", "amount": 6100 }, { "source": "Source 2", "amount": 3200 } ] },
+      { "id": "2024-1", "month": 1, "income": [ { "source": "Source 1", "amount": 9000 }, { "source": "Source 2", "amount": 4100 } ] },
+      { "id": "2024-2", "month": 2, "income": [ { "source": "Source 1", "amount": 5900 }, { "source": "Source 2", "amount": 2500 } ] },
+      { "id": "2024-3", "month": 3, "income": [ { "source": "Source 1", "amount": 6050 }, { "source": "Source 2", "amount": 4800 } ] },
+      { "id": "2024-4", "month": 4, "income": [ { "source": "Source 1", "amount": 6200 }, { "source": "Source 2", "amount": 2300 } ] },
+      { "id": "2024-5", "month": 5, "income": [ { "source": "Source 1", "amount": 9000 }, { "source": "Source 2", "amount": 5000 } ] },
+      { "id": "2024-6", "month": 6, "income": [ { "source": "Source 1", "amount": 5800 }, { "source": "Source 2", "amount": 2100 } ] },
+      { "id": "2024-7", "month": 7, "income": [ { "source": "Source 1", "amount": 6000 }, { "source": "Source 2", "amount": 3500 } ] },
+      { "id": "2024-8", "month": 8, "income": [ { "source": "Source 1", "amount": 6300 }, { "source": "Source 2", "amount": 4200 } ] },
+      { "id": "2024-9", "month": 9, "income": [ { "source": "Source 1", "amount": 5950 }, { "source": "Source 2", "amount": 2700 } ] },
+      { "id": "2024-10", "month": 10, "income": [ { "source": "Source 1", "amount": 6100 }, { "source": "Source 2", "amount": 3900 } ] },
+      { "id": "2024-11", "month": 11, "income": [ { "source": "Source 1", "amount": 6050 }, { "source": "Source 2", "amount": 2200 } ] }
     ]
   },
   {
     "id": "ac0c2d92-021d-4053-bd49-2299ba38355c",
     "year": 2025,
     "monthIncome": [
-      {
-        "id": "d5a5b6fa-fbec-4729-b579-060625ba2g26",
-        "month": 0,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 6000
-          },
-          {
-            "source": "Source 2",
-            "amount": 8050
-          }
-        ]
-      },
-      {
-        "id": "l2d5b6fa-fbec-4729-b579-060625ba2989",
-        "month": 1,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 5000
-          },
-          {
-            "source": "Source 2",
-            "amount": 2021
-          }
-        ]
-      },
-      {
-        "id": "d5a5b6fa-fbec-4978-b579-060625ba2989",
-        "month": 2,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 6000
-          },
-          {
-            "source": "Source 2",
-            "amount": 6000
-          }
-        ]
-      },
-      {
-        "id": "d5a5b6fa-fbec-4729-b111-060625ba2989",
-        "month": 4,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 6000
-          },
-          {
-            "source": "Source 2",
-            "amount": 6000
-          }
-        ]
-      },
-      {
-        "id": "f1a5b6fa-fbec-4729-b579-060625ba2989",
-        "month": 5,
-        "income": [
-          {
-            "source": "Source 1",
-            "amount": 6000
-          },
-          {
-            "source": "Source 2",
-            "amount": 6000
-          }
-        ]
-      }
+      { "id": "2025-0", "month": 0, "income": [ { "source": "Source 1", "amount": 6000 }, { "source": "Source 2", "amount": 4100 } ] },
+      { "id": "2025-1", "month": 1, "income": [ { "source": "Source 1", "amount": 9000 }, { "source": "Source 2", "amount": 3200 } ] },
+      { "id": "2025-2", "month": 2, "income": [ { "source": "Source 1", "amount": 5900 }, { "source": "Source 2", "amount": 2500 } ] },
+      { "id": "2025-3", "month": 3, "income": [ { "source": "Source 1", "amount": 6050 }, { "source": "Source 2", "amount": 4800 } ] },
+      { "id": "2025-4", "month": 4, "income": [ { "source": "Source 1", "amount": 6200 }, { "source": "Source 2", "amount": 2300 } ] },
+      { "id": "2025-5", "month": 5, "income": [ { "source": "Source 1", "amount": 9000 }, { "source": "Source 2", "amount": 5000 } ] },
+      { "id": "2025-6", "month": 6, "income": [ { "source": "Source 1", "amount": 5800 }, { "source": "Source 2", "amount": 2100 } ] },
+      { "id": "2025-7", "month": 7, "income": [ { "source": "Source 1", "amount": 6000 }, { "source": "Source 2", "amount": 3500 } ] },
+      { "id": "2025-8", "month": 8, "income": [ { "source": "Source 1", "amount": 6300 }, { "source": "Source 2", "amount": 4200 } ] },
+      { "id": "2025-9", "month": 9, "income": [ { "source": "Source 1", "amount": 5950 }, { "source": "Source 2", "amount": 2700 } ] },
+      { "id": "2025-10", "month": 10, "income": [ { "source": "Source 1", "amount": 6100 }, { "source": "Source 2", "amount": 3900 } ] },
+      { "id": "2025-11", "month": 11, "income": [ { "source": "Source 1", "amount": 6050 }, { "source": "Source 2", "amount": 2200 } ] }
     ]
   }
 ]
