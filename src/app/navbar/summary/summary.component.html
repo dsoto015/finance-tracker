@@ -26,6 +26,21 @@
             </canvas>
         </mat-card-content>
     </mat-card>
+    
+    <mat-card>
+  <mat-card-header>
+    <mat-card-title>Savings</mat-card-title>
+    <mat-card-subtitle>Total savings per month for {{ currentYearSignal() }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="chart-content">
+    <canvas
+      baseChart
+      [data]="savingsChartDataSignal()"
+      [options]="savingsChartOptions"
+      [type]="barChartType">
+    </canvas>
+  </mat-card-content>
+</mat-card>
     <mat-card>
         <mat-card-header>
             <mat-card-title>Income</mat-card-title>
@@ -76,7 +91,4 @@
     </canvas>
   </mat-card-content>
 </mat-card>
-    <button (click)="load()">
-        test
-    </button>
 </div>
