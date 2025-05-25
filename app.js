@@ -6,12 +6,21 @@ const fs = require('fs');
 let mainWindow;
 
 // Get a safe path to store the file
+
+//expenses
 const expensesPath = path.join(app.getPath('userData'), 'expenses.json');
 const defaultsPath = path.join(app.getPath('userData'), 'default-categories.json');
 const fallbackDefaultsPath = path.join(__dirname, `public/mock-data/mock-default-categories.json`);
+
+//income
 const incomePath = path.join(app.getPath('userData'), 'income.json');
 const incomeSourcesPath = path.join(app.getPath('userData'), 'income-sources.json');
 const fallbackDefaultIncomePath = path.join(__dirname, `public/mock-data/mock-income-sources.json`);
+
+//savings
+const savingsPath = path.join(app.getPath('userData'), 'savings.json');
+const savingsSourcesPath = path.join(app.getPath('userData'), 'savings-sources.json');
+const fallbackDefaultSavingsPath = path.join(__dirname, `public/mock-data/mock-savings-sources.json`);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -133,7 +142,47 @@ ipcMain.handle('save-income', async (_, data) => {
   }
 });
 
+ipcMain.handle('load-savings-default-sources', async () => {
+  try {
+    if (!fs.existsSync(savingsSourcesPath)) {
+      console.log('savings source didnt exist, reading from ', fallbackDefaultSavingsPath);
+      const data = fs.readFileSync(fallbackDefaultSavingsPath, 'utf-8');
+      fs.writeFileSync(savingsSourcesPath, data);
+      console.log('wrote to ', savingsSourcesPath);
+    }
 
+    const data = fs.readFileSync(savingsSourcesPath, 'utf-8');
+    console.log('loading saving sources from:', savingsSourcesPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading savings:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('load-savings', async () => {
+  try {
+    if (!fs.existsSync(savingsPath)) {
+      fs.writeFileSync(savingsPath, '[]');
+    }
+    const data = fs.readFileSync(savingsPath, 'utf-8');
+    console.log('loading savings from:', savingsPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading savings:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('save-savings', async (_, data) => {
+  try {
+    fs.writeFileSync(savingsPath, JSON.stringify(data, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving savings:', error);
+    return { success: false, error };
+  }
+});
 
 
 app.on('ready', createWindow);

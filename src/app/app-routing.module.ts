@@ -4,6 +4,7 @@ import { SetupComponent } from './navbar/setup/setup.component';
 import { IncomeComponent } from './navbar/income/income.component';
 import { ExpensesComponent } from './navbar/expenses/expenses.component';
 import { SummaryComponent } from './navbar/summary/summary.component';
+import { SavingsComponent } from './navbar/savings/savings.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,11 @@ export const routes: Routes = [
     path: 'income',
     component: IncomeComponent,
     title: "Income"
+  },
+  {
+    path: 'savings',
+    component: SavingsComponent,
+    title: "Savings"
   },
   {
     path: 'expenses',

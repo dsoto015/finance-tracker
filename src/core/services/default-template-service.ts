@@ -4,6 +4,7 @@ import { ElectronService } from './electron-service';
 import { HttpClient } from '@angular/common/http';
 import { CategoryBlock, MonthExpense } from '../models/expenses.model';
 import { Income, YearIncome } from '../models/income.model';
+import { Savings } from '../models/savings.model';
 
 @Injectable({ providedIn: 'root' })
 export class DefaultTemplateService {
@@ -55,6 +56,27 @@ export class DefaultTemplateService {
       try {
         const result = await this.http
           .get<[]>('/mock-data/mock-income-sources.json')
+          .toPromise();  
+        data = result ?? [];
+      } catch (err) {
+        console.warn('Failed to load mock data, using empty array');
+        data = [];
+      }
+    }
+    
+    return data;
+  }
+
+  async loadDefaultSavingsSources(): Promise<Savings[]> {
+    const isElectron = !!window?.electron?.loadSavingsDefaultSources;
+    let data: Savings[];
+    if (isElectron) {
+        data = await window.electron.loadSavingsDefaultSources() ?? [];        
+    } else {
+      console.log('[ng serve] Loading mock savings');
+      try {
+        const result = await this.http
+          .get<[]>('/mock-data/mock-savings-sources.json')
           .toPromise();  
         data = result ?? [];
       } catch (err) {

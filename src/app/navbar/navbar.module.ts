@@ -11,6 +11,7 @@ import { IncomeModule } from './income/income.module';
 import { RouterModule } from '@angular/router';
 import { ExpensesModule } from './expenses/expenses.module';
 import { SummaryModule } from './summary/summary.module';
+import { SavingsModule } from './savings/savings.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { SummaryModule } from './summary/summary.module';
     CommonModule,
     SetupModule,
     IncomeModule,
+    SavingsModule,
     ExpensesModule,
     SummaryModule,
     RouterModule,

@@ -1,0 +1,55 @@
+.income {
+    margin: 0px 50px;
+
+    .top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .month-selector {
+
+            .year-picker {
+                margin: 20px 0px -10px 0px;
+
+            }
+        }
+
+        .edit {}
+
+    }
+
+    .income-table {
+        padding: 0px 50px;
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .month-table {
+            .source-row {}
+
+            .cell-row {
+
+                .cell-source {
+                    display: flex;
+                    flex-direction: row;
+                    margin: 10px;
+                    width: 50vh;
+                }
+
+                .amount {
+                    display: flex;
+                }
+
+                .cell-amount {
+                    margin: 10px 0px 0px 0px;
+                    width: 20h;
+                }
+
+                .delete-row {}
+            }
+        }
+    }
+}

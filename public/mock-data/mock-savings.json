@@ -1,0 +1,38 @@
+[
+  {
+    "id": "46255359-5c03-4c15-9080-a643df6a7e21",
+    "year": 2024,
+    "monthSavings": [
+      { "id": "2024-0", "month": 0, "savings": [ { "source": "Capital One", "amount": 3000 }, { "source": "Summer Saver", "amount": 3200 } ] },
+      { "id": "2024-1", "month": 1, "savings": [ { "source": "Capital One", "amount": 9000 }, { "source": "Summer Saver", "amount": 4100 } ] },
+      { "id": "2024-2", "month": 2, "savings": [ { "source": "Capital One", "amount": 5900 }, { "source": "Summer Saver", "amount": 2500 } ] },
+      { "id": "2024-3", "month": 3, "savings": [ { "source": "Capital One", "amount": 6050 }, { "source": "Summer Saver", "amount": 4800 } ] },
+      { "id": "2024-4", "month": 4, "savings": [ { "source": "Capital One", "amount": 6200 }, { "source": "Summer Saver", "amount": 2300 } ] },
+      { "id": "2024-5", "month": 5, "savings": [ { "source": "Capital One", "amount": 9000 }, { "source": "Summer Saver", "amount": 5000 } ] },
+      { "id": "2024-6", "month": 6, "savings": [ { "source": "Capital One", "amount": 5800 }, { "source": "Summer Saver", "amount": 2100 } ] },
+      { "id": "2024-7", "month": 7, "savings": [ { "source": "Capital One", "amount": 6000 }, { "source": "Summer Saver", "amount": 3500 } ] },
+      { "id": "2024-8", "month": 8, "savings": [ { "source": "Capital One", "amount": 6300 }, { "source": "Summer Saver", "amount": 4200 } ] },
+      { "id": "2024-9", "month": 9, "savings": [ { "source": "Capital One", "amount": 5950 }, { "source": "Summer Saver", "amount": 2700 } ] },
+      { "id": "2024-10", "month": 10, "savings": [ { "source": "Capital One", "amount": 6100 }, { "source": "Summer Saver", "amount": 3900 } ] },
+      { "id": "2024-11", "month": 11, "savings": [ { "source": "Capital One", "amount": 6050 }, { "source": "Summer Saver", "amount": 2200 } ] }
+    ]
+  },
+  {
+    "id": "ac0c2d92-021d-4053-bd49-2299ba38355c",
+    "year": 2025,
+    "monthSavings": [
+      { "id": "2025-0", "month": 0, "savings": [ { "source": "Capital One", "amount": 6000 }, { "source": "Summer Saver", "amount": 4100 } ] },
+      { "id": "2025-1", "month": 1, "savings": [ { "source": "Capital One", "amount": 9000 }, { "source": "Summer Saver", "amount": 3200 } ] },
+      { "id": "2025-2", "month": 2, "savings": [ { "source": "Capital One", "amount": 5900 }, { "source": "Summer Saver", "amount": 2500 } ] },
+      { "id": "2025-3", "month": 3, "savings": [ { "source": "Capital One", "amount": 6050 }, { "source": "Summer Saver", "amount": 4800 } ] },
+      { "id": "2025-4", "month": 4, "savings": [ { "source": "Capital One", "amount": 6200 }, { "source": "Summer Saver", "amount": 2300 } ] },
+      { "id": "2025-5", "month": 5, "savings": [ { "source": "Capital One", "amount": 9000 }, { "source": "Summer Saver", "amount": 5000 } ] },
+      { "id": "2025-6", "month": 6, "savings": [ { "source": "Capital One", "amount": 5800 }, { "source": "Summer Saver", "amount": 2100 } ] },
+      { "id": "2025-7", "month": 7, "savings": [ { "source": "Capital One", "amount": 6000 }, { "source": "Summer Saver", "amount": 3500 } ] },
+      { "id": "2025-8", "month": 8, "savings": [ { "source": "Capital One", "amount": 6300 }, { "source": "Summer Saver", "amount": 4200 } ] },
+      { "id": "2025-9", "month": 9, "savings": [ { "source": "Capital One", "amount": 5950 }, { "source": "Summer Saver", "amount": 2700 } ] },
+      { "id": "2025-10", "month": 10, "savings": [ { "source": "Capital One", "amount": 6100 }, { "source": "Summer Saver", "amount": 3900 } ] },
+      { "id": "2025-11", "month": 11, "savings": [ { "source": "Capital One", "amount": 6050 }, { "source": "Summer Saver", "amount": 2200 } ] }
+    ]
+  }
+]
