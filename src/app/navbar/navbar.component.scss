@@ -2,18 +2,35 @@ mat-sidenav {
   width: 200px;
 }
 
-mat-sidenav-content {
-}
-
-mat-sidenav-container {
-  height: 93vh;
-}
-
 .container {
+  background-color: #fff8f8;
+
   .toolbar {
     background-color: #DC9AA9;
+
     .app-name {
-      margin: 0px 0px 0px 10px
+      margin: 0px 0px 0px 10px;
+      font-weight: 500;
+
+    }
+
+    .nav-buttons {
+      margin: 0 10px;
+      
+      button.active-link {
+        color: black;
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background-color: #514346;
+          border-radius: 2px;
+          height: 2px;
+        }
+      }
     }
   }
 }

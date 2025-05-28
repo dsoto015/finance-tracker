@@ -7,10 +7,15 @@ import { SummaryComponent } from './navbar/summary/summary.component';
 import { SavingsComponent } from './navbar/savings/savings.component';
 
 export const routes: Routes = [
+  // {
+  //   path: 'setup',
+  //   component: SetupComponent,
+  //   title: "Setup"
+  // },
   {
-    path: 'setup',
-    component: SetupComponent,
-    title: "Setup"
+    path: '',
+    redirectTo: 'summary',
+    pathMatch: 'full'
   },
   {
     path: 'income',

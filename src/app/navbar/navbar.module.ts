@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { ExpensesModule } from './expenses/expenses.module';
 import { SummaryModule } from './summary/summary.module';
 import { SavingsModule } from './savings/savings.module';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 @NgModule({
@@ -28,7 +29,9 @@ import { SavingsModule } from './savings/savings.module';
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule],
+    MatListModule,
+    MatTabsModule
+  ],
   exports: [NavbarComponent]
 })
 export class NavbarModule { }

@@ -19,10 +19,10 @@ export class SavingsComponent {
     this.date().getFullYear()
   );
 
-  readonly totalIncomeSignal = this.savingsService.totalSavingsSignal;
+  readonly totalSavingsSignal = this.savingsService.totalSavingsSignal;
   
   readonly monthIncomeSignal = computed(() =>
-    this.totalIncomeSignal()
+    this.totalSavingsSignal()
       .filter(x => x.year === this.currentYearSignal())
       .flatMap(y => y.monthSavings)
   );
