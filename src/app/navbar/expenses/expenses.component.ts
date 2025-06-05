@@ -1,9 +1,11 @@
-import { Component, computed, Inject, signal } from '@angular/core';
+import { Component, computed, inject, Inject, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { ExpenseService } from '../../../core/services/expense.service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DefaultTemplateService } from '../../../core/services/default-template-service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
 
 @Component({
   selector: 'app-expenses',
@@ -14,6 +16,8 @@ import { DefaultTemplateService } from '../../../core/services/default-template-
 
 
 export class ExpensesComponent {
+    readonly dialog = inject(MatDialog);
+
   displayedColumns: string[] = ['actions', 'name', 'value'];
   categories: CategoryBlock[] = [];
   defaultCategories: CategoryBlock[] = [];
@@ -26,7 +30,7 @@ export class ExpensesComponent {
 
   isEditableSignal = signal(false);
   editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
-
+ 
   toggleEditable(): void {
     this.isEditableSignal.update(() => !this.isEditableSignal());
   }
@@ -64,7 +68,8 @@ export class ExpensesComponent {
           order: row.order,
           recurring: row.recurring ?? false
         })),
-        total: 0
+        total: 0,
+        note: null
       }))
     };
     this.monthExpenses.push(monthData);
@@ -168,18 +173,20 @@ export class ExpensesComponent {
   }
 
   addCategory(): void {
-    this.categories.push({ 
+    this.categories.push({
       id: uuid(),
       name: 'NEW CATEGORY',
-      rows: [ 
+      rows: [
         {
           id: uuid(),
           order: 0,
           name: "",
           value: null,
           recurring: false,
-        }
-      ] });
+        },
+      ],
+      note: null
+    });
     this.isEditableSignal.update(() => true);
   }
 
@@ -243,10 +250,41 @@ export class ExpensesComponent {
     this.loadMonthData(normalizedMonth);
   }
 
+  openNoteDialog(category: CategoryBlock) {
+    let currentCategory = this.getCategory(category.id);
+    if(currentCategory == undefined)
+      return;
+
+    const dialogRef = this.dialog.open(NotesDialogComponent, {
+      height: '350px',
+      width: '500px',
+      data: { category: category.name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result !== undefined) {
+        currentCategory.note = result;
+        this.saveChanges();
+      }
+    });
+  }
+
   saveChanges(): void {
     console.log('Saving changes..total spent is: ', this.totalSpent);
     this.currentMonthExpense.totalSpent = this.totalSpent;
     this.expenseService.save(this.monthExpenses);
     this.isEditableSignal.update(() => false);
+  }
+
+  hasNotes(categoryId: string): boolean {
+    let currentCategory = this.getCategory(categoryId);
+    if (currentCategory == undefined)
+      return false;
+
+    if (currentCategory.note && currentCategory.note.trim().length > 0) {
+      return true;
+    }
+    return false;
   }
 }

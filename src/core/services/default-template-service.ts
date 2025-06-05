@@ -39,8 +39,8 @@ export class DefaultTemplateService {
         value: row.value ?? null,
         order: rowIndex,
         recurring: row.recurring ?? false
-      }))
-
+      })), 
+      note: null
     }));
     console.log("service returned: ", data);
     return data;

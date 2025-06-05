@@ -4,6 +4,7 @@
   .top-row {
     display: flex;
     justify-content: flex-end;
+    margin-top: 25px;
   }
 
   .table {
@@ -13,9 +14,7 @@
       margin: 10px 0px -5px 0px
     }
 
-    .subcategory {
-      
-    }
+    .subcategory {}
 
     .header {
       display: flex;
@@ -25,14 +24,18 @@
         margin-left: 20px;
       }
 
-      .category-header {
-        position: sticky;
-        top: 0px;
-        z-index: 10;
-        padding: 0.5rem 0;
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: bold;
+      .category-note {
+        display: flex;
+
+        .category-header {
+          position: sticky;
+          top: 0px;
+          z-index: 10;
+          padding: 0.5rem 0;
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: bold;
+        }
       }
     }
 
@@ -49,10 +52,10 @@
       display: flex;
       align-items: center;
 
-      .amount {     
+      .amount {
         width: 125px;
       }
-  
+
 
       mat-form-field {
         justify-content: flex-end;

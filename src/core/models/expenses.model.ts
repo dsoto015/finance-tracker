@@ -11,6 +11,7 @@ export interface CategoryBlock {
   name: string;
   rows: SubcategoryRow[];
   total?: number;
+  note: string | null
 }
 
 export interface SubcategoryRow {

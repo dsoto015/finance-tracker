@@ -29,8 +29,14 @@
     <p>total spent for the month (minus recurring charges): {{totalSpentWithoutRecurring | currency}} </p>
   </div>
   <div *ngFor="let category of categories" class="table">
-    <div class="header">
-      <h3 class="category-header" *ngIf="!isEditableSignal()">{{ category.name }}</h3>
+    <div class="header">      
+      <div class="category-note" *ngIf="!isEditableSignal()">
+        <mat-icon *ngIf="hasNotes(category.id)">priority_high</mat-icon>
+        <h3 class="category-header" >{{ category.name }}</h3>
+        <button mat-icon-button (click)="openNoteDialog(category)">
+          <mat-icon>comment</mat-icon>
+        </button>
+      </div>
       <mat-form-field *ngIf="isEditableSignal()" appearance="outline" class="category-header">
         <input matInput [(ngModel)]="category.name" placeholder="Category Name" />
       </mat-form-field>

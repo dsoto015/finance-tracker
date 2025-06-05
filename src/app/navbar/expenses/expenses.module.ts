@@ -9,11 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { FormsModule } from '@angular/forms';
 
 import { ExpensesComponent } from './expenses.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
+import { NotesDialogModule } from './notes-dialog/notes-dialog.module';
 
 
 @NgModule({
@@ -31,7 +34,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatTable,
     DragDropModule,
     MatDatepickerModule, 
-    MatNativeDateModule
+    MatNativeDateModule,
+    NotesDialogModule
   ],
   exports: [ExpensesComponent]
 })

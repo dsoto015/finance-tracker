@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Notes</h2>
+<mat-dialog-content>
+    <p>Add a note for the {{ data.category }} category</p>
+    <mat-form-field class="comment">
+        <mat-label>Leave a comment</mat-label>
+        <textarea matInput [(ngModel)]="note" placeholder="Spent too much on..."></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">No Thanks</button>
+    <button mat-raised-button="filled" (click)="onSubmitClick()" cdkFocusInitial>Submit</button>
+</mat-dialog-actions>
