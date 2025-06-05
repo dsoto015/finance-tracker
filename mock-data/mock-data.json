@@ -1,0 +1,53 @@
+[
+  {
+    "id": "7f5a9e7a-b1cb-4e5e-8995-e39dd89e5d25",
+    "month": 6,
+    "year": 2025,
+    "totalSpent": 450,
+    "categories": [
+      {
+        "id": "d3b2b115-7e32-41f6-b2b7-e357c6ae9a2a",
+        "name": "Groceries",
+        "total": 250,
+        "rows": [
+          { "id": "b1f7fce2-69b0-4c5f-b96a-5b7a2f60e8d7", "order": 1, "name": "Trader Joe's", "value": 150 },
+          { "id": "2f1b0d72-d6ae-4e4f-b205-d24e0a3e943f", "order": 0, "name": "Whole Foods", "value": 100 }
+        ]
+      },
+      {
+        "id": "48d91852-4c70-4765-bb80-8c79c7f249e7",
+        "name": "Utilities",
+        "total": 200,
+        "rows": [
+          { "id": "1a74e5c3-d799-40e1-b3de-7e65a4f1e57c", "order": 0, "name": "Electricity", "value": 120 },
+          { "id": "1b5f5a78-ec96-4f96-9999-2c7817f6e5e3", "order": 1, "name": "Water", "value": 80 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "e4097f11-e31f-4ad5-bd7d-b7bc2c3782d6",
+    "month": 1,
+    "year": 2025,
+    "totalSpent": 300,
+    "categories": [
+      {
+        "id": "e9f60c3d-55ae-4466-93f7-0beecaf3bfc6",
+        "name": "Transportation",
+        "total": 180,
+        "rows": [
+          { "id": "a78e99b6-0487-4d2a-b6c3-5c8b087f988e", "order": 0, "name": "Gas", "value": 120 },
+          { "id": "c8ad98e4-2643-4f53-a4a4-25b4c408b6e7", "order": 1, "name": "Uber", "value": 60 }
+        ]
+      },
+      {
+        "id": "f4b7bc65-d149-4233-999f-3cf5b0fc2593",
+        "name": "Subscriptions",
+        "total": 120,
+        "rows": [
+          { "id": "617725f5-bcfd-45cb-b57f-24e214f5a3cc", "order": 0, "name": "Spotify", "value": 17 }
+        ]
+      }
+    ]
+  }
+]
