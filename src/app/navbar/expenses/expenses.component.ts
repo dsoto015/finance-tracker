@@ -1,4 +1,4 @@
-import { Component, computed, inject, Inject, signal } from '@angular/core';
+import { Component, computed, inject, Inject, Signal, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { ExpenseService } from '../../../core/services/expense.service';
 import { CategoryBlock, MonthExpense, SubcategoryRow } from '../../../core/models/expenses.model';
@@ -16,7 +16,7 @@ import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
 
 
 export class ExpensesComponent {
-    readonly dialog = inject(MatDialog);
+  readonly dialog = inject(MatDialog);
 
   displayedColumns: string[] = ['actions', 'name', 'value'];
   categories: CategoryBlock[] = [];
@@ -258,7 +258,7 @@ export class ExpensesComponent {
     const dialogRef = this.dialog.open(NotesDialogComponent, {
       height: '350px',
       width: '500px',
-      data: { category: category.name }
+      data: { category: category.name, note: category.note }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -277,7 +277,7 @@ export class ExpensesComponent {
     this.isEditableSignal.update(() => false);
   }
 
-  hasNotes(categoryId: string): boolean {
+  hasNote(categoryId: string): boolean {
     let currentCategory = this.getCategory(categoryId);
     if (currentCategory == undefined)
       return false;

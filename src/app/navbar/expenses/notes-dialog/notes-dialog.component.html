@@ -3,7 +3,7 @@
     <p>Add a note for the {{ data.category }} category</p>
     <mat-form-field class="comment">
         <mat-label>Leave a comment</mat-label>
-        <textarea matInput [(ngModel)]="note" placeholder="Spent too much on..."></textarea>
+        <textarea matInput [(ngModel)]="data.note" placeholder="Spent too much on..."></textarea>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>

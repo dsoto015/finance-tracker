@@ -9,14 +9,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class NotesDialogComponent {
   readonly dialogRef = inject(MatDialogRef<NotesDialogComponent>);
-  readonly data = inject(MAT_DIALOG_DATA) as { category: string };
-  note = '';
+  readonly data = inject(MAT_DIALOG_DATA) as { category: string, note: string };
 
   onCancelClick(): void {
     this.dialogRef.close();
   }
 
   onSubmitClick(): void {
-    this.dialogRef.close(this.note);
+    this.dialogRef.close(this.data.note);
   }
 }

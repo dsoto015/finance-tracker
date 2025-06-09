@@ -1,105 +1,104 @@
 <div class="expenses">
   <div class="top-row">
-    <button mat-button (click)="toggleEditable()">
-      {{ editVerbiageComputedSignal() }}
-      <mat-icon>{{ isEditableSignal() ? 'lock_open' : 'lock' }}</mat-icon>
-    </button>
-  </div>
+    <div class="month-selector">
+      <button class="chevron" mat-icon-button (click)="prevMonth()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Month</mat-label>
+        <input matInput [matDatepicker]="picker" [value]="selectedMonth">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker (monthSelected)="onChosenMonth($event, picker)" [startAt]="selectedMonth"
+          [startView]="'year'" datepickerMode="month">
+        </mat-datepicker>
+      </mat-form-field>
+      <button class="chevron" mat-icon-button (click)="nextMonth()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
 
-  <div class="month-selector">
-    <button class="chevron" mat-icon-button (click)="prevMonth()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <mat-form-field appearance="outline">
-      <mat-label>Select Month</mat-label>
-      <input matInput [matDatepicker]="picker" [value]="selectedMonth">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker (monthSelected)="onChosenMonth($event, picker)" [startAt]="selectedMonth"
-        [startView]="'year'" datepickerMode="month">
-      </mat-datepicker>
-    </mat-form-field>
-    <button class="chevron" mat-icon-button (click)="nextMonth()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>  
+    <div class="unlock-rows">
+      <button mat-button (click)="toggleEditable()">
+        {{ editVerbiageComputedSignal() }}
+        <mat-icon>{{ isEditableSignal() ? 'lock_open' : 'lock' }}</mat-icon>
+      </button>
+    </div>
   </div>
-
   <div class="month-header">
     <h2>{{currentMonthName}}</h2>
     <p>total spent for the month: {{totalSpent | currency}} </p>
     <p>total spent for the month (minus recurring charges): {{totalSpentWithoutRecurring | currency}} </p>
   </div>
-  <div *ngFor="let category of categories" class="table">
-    <div class="header">      
-      <div class="category-note" *ngIf="!isEditableSignal()">
-        <mat-icon *ngIf="hasNotes(category.id)">priority_high</mat-icon>
-        <h3 class="category-header" >{{ category.name }}</h3>
-        <button mat-icon-button (click)="openNoteDialog(category)">
-          <mat-icon>comment</mat-icon>
-        </button>
-      </div>
-      <mat-form-field *ngIf="isEditableSignal()" appearance="outline" class="category-header">
-        <input matInput [(ngModel)]="category.name" placeholder="Category Name" />
-      </mat-form-field>
-      <button mat-raised-button *ngIf="isEditableSignal()" (click)="deleteCategory(category.id)">Delete Category
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    <div>
-      <table mat-table cdkDropList [cdkDropListData]="category.rows" [cdkDropListConnectedTo]="[]" [id]="category.id"
-        (cdkDropListDropped)="drop($event, category)" [dataSource]="category.rows">
-
-        <!-- Delete Button Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let row">
-            <mat-icon *ngIf="isEditableSignal()" cdkDrag cdkDragHandle>reorder</mat-icon>
-          </td>
-          <td mat-footer-cell *matFooterCellDef> </td>
-        </ng-container>
-
-        <!-- Subcategory Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Subcategory</th>
-          <td mat-cell *matCellDef="let row">
-            <mat-form-field class="subcategory">
-              <input matInput [(ngModel)]="row.name" placeholder="Subcategory" [readonly]="!isEditableSignal()">
+  <div *ngFor="let category of categories" class="category-card">
+    <mat-card>
+      <mat-card-header>
+        <div class="category-header-row">
+          <div class="category-title">
+            <ng-container *ngIf="!isEditableSignal()">
+              {{ category.name }}
+            </ng-container>
+            <mat-form-field *ngIf="isEditableSignal()" appearance="outline">
+              <input matInput [(ngModel)]="category.name" placeholder="Category Name" />
             </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef> Total </td>
-        </ng-container>
+          </div>
+          <div class="note-button">
+            <ng-container *ngIf="!hasNote(category.id)">
+              <button mat-button (click)="openNoteDialog(category)">Add Note</button>
+            </ng-container>
+            <button mat-icon-button (click)="openNoteDialog(category)" *ngIf="hasNote(category.id)">
+              <mat-icon>comment</mat-icon>
+            </button>
+          </div>
+        </div>
 
-        <!-- Amount Column -->
-        <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef>Amount</th>
-          <td mat-cell *matCellDef="let row">
-            <div class="clear-category">
-              <mat-form-field class="amount">
+        <div class="category-total">Total: {{ category.total | currency }}</div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div  cdkDropList [cdkDropListData]="category.rows" [id]="category.id"
+          (cdkDropListDropped)="drop($event, category)" class="row-list">
+          <div class="row-content" *ngFor="let row of category.rows; let i = index" cdkDrag>
+            <div class="row-controls" cdkDragHandle *ngIf="isEditableSignal()">
+              <mat-icon>reorder</mat-icon>
+            </div>
+            <div class="subcategory">
+              <mat-form-field appearance="fill">
+                <input matInput [(ngModel)]="row.name" placeholder="Subcategory" [readonly]="!isEditableSignal()" />
+              </mat-form-field>
+            </div>
+            <div class="amount">
+              <mat-form-field appearance="fill">
                 <input matInput type="text" placeholder="Amount" [(ngModel)]="row.value"
-                  [name]="'value-' + category.id + '-' + row.id" [disabled]="isEditableSignal()"
+                  [name]="'value-' + category.id + '-' + (row.id || i)" [disabled]="isEditableSignal()"
                   (keypress)="allowOnlyNumbers($event)" (ngModelChange)="updateCategoryTotal(category)"
-                  (blur)="saveInput(category.id, row.id, row.value)">
-                <button mat-icon-button matSuffix aria-label="Clear" *ngIf="row.value && !isEditableSignal()"
-                  (click)="clearValue(category.id, row.id)">
+                  (blur)="saveInput(category.id, row.id || i.toString(), row.value ?? 0)" />
+                <button mat-icon-button matSuffix *ngIf="row.value && !isEditableSignal()"
+                  (click)="clearValue(category.id, row.id || i.toString())">
                   <mat-icon>close</mat-icon>
                 </button>
               </mat-form-field>
-              <button *ngIf="isEditableSignal()" mat-icon-button color="warn" (click)="deleteRow(category.id, row.id)"
-                class="delete">
-                <mat-icon>delete</mat-icon>
-              </button>
             </div>
-          </td>
-          <td mat-footer-cell *matFooterCellDef>{{ category.total | currency }}</td>
-        </ng-container>
+            <button *ngIf="isEditableSignal()" mat-icon-button color="warn"
+              (click)="deleteRow(category.id, row.id || i.toString())" class="delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="sub-header"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
-      </table>
-    </div>
+        <div class="row-footer" *ngIf="isEditableSignal()">
+          <button mat-button (click)="addRow(category.id)">+ Add Row</button>
+        </div>
+      </mat-card-content>
 
-    <button mat-button *ngIf="isEditableSignal()" (click)="addRow(category.id)">+ Add Row</button>
+      <mat-card-actions>
+
+        <button mat-raised-button *ngIf="isEditableSignal()" (click)="deleteCategory(category.id)">
+          Delete Category <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
   </div>
+
 
   <div class="floating-buttons">
     <button class="new-category" mat-fab extended (click)="addCategory()">New Category
