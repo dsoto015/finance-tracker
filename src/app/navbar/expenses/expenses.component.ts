@@ -6,6 +6,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DefaultTemplateService } from '../../../core/services/default-template-service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
+import { ExpenseSettingsComponent } from './expense-settings/expense-settings.component';
 
 @Component({
   selector: 'app-expenses',
@@ -265,6 +266,21 @@ export class ExpensesComponent {
       console.log('The dialog was closed');
       if (result !== undefined) {
         currentCategory.note = result;
+        this.saveChanges();
+      }
+    });
+  }
+
+  openSettingsDialog() {
+    const dialogRef = this.dialog.open(ExpenseSettingsComponent, {
+      height: '750px',
+      width: '600px',
+      data: {  }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result !== undefined) {
         this.saveChanges();
       }
     });

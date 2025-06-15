@@ -18,6 +18,10 @@
     </div>
 
     <div class="unlock-rows">
+      <button mat-button (click)="openSettingsDialog()">
+        Configure
+        <mat-icon>settings</mat-icon>
+      </button>
       <button mat-button (click)="toggleEditable()">
         {{ editVerbiageComputedSignal() }}
         <mat-icon>{{ isEditableSignal() ? 'lock_open' : 'lock' }}</mat-icon>

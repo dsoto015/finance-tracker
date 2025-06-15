@@ -1,0 +1,48 @@
+<div class="settings">
+    <h2 class="category-header"> Default Settings</h2>
+    <div class="categories" *ngFor="let category of defaultCategories; let i = index">
+        <h3 class="category-header">{{ category.name }}</h3>
+
+        <table mat-table [dataSource]="category.rows">
+
+            <!-- Define columns -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                <td mat-footer-cell *matFooterCellDef>
+                    <button mat-button (click)="addRow(category)">+ Add Row</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef> Value </th>
+
+                <td mat-cell *matCellDef="let row">
+                    <mat-form-field class="cell-source">
+                        <input matInput [(ngModel)]="row.value" [disabled]="!isRecurring(row)">
+                    </mat-form-field>
+                </td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="recurring">
+                <th mat-header-cell *matHeaderCellDef> Recurring Charge </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox [(ngModel)]="row.recurring" (ngModelChange)="onCheckChanged(row, $event)">
+                    </mat-checkbox>
+                </td>
+
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="['name', 'value', 'recurring']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'value', 'recurring']"></tr>
+            <tr mat-footer-row *matFooterRowDef="['name',] sticky: true"></tr>
+        </table>
+    </div>
+
+    <div class="bottom-buttons">
+        <button mat-button (click)="onCancelClick()">No Thanks</button>
+        <button mat-raised-button color="primary" (click)="onSubmitClick()" cdkFocusInitial>Submit</button>
+    </div>
+</div>

@@ -17,6 +17,7 @@ import { ExpensesComponent } from './expenses.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
 import { NotesDialogModule } from './notes-dialog/notes-dialog.module';
+import { ExpenseSettingsModule } from './expense-settings/expense-settings.module';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { NotesDialogModule } from './notes-dialog/notes-dialog.module';
     DragDropModule,
     MatDatepickerModule, 
     MatNativeDateModule,
-    NotesDialogModule
+    NotesDialogModule,
+    ExpenseSettingsModule
   ],
   exports: [ExpensesComponent]
 })
