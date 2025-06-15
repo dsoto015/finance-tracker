@@ -1,5 +1,6 @@
 {
   "name": "finance-tracker",
+  "productName": "Finance Tracker",
   "version": "0.0.0",
   "main": "app.js",
   "scripts": {
@@ -8,7 +9,8 @@
     "serve": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+  "package-win": "electron-packager . finance-tracker --overwrite --asar --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=\"C:\\Builds\" --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\\\"Finance Tracker\\\""
   },
   "private": true,
   "dependencies": {
@@ -21,6 +23,7 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@electron/packager": "^18.3.6",
     "chart.js": "^4.4.9",
     "chartjs-plugin-datalabels": "^2.2.0",
     "ng2-charts": "^5.0.4",
@@ -35,7 +38,8 @@
     "@angular/compiler-cli": "^19.2.0",
     "@types/jasmine": "~5.1.0",
     "angular-cli-ghpages": "^2.0.3",
-    "electron": "^35.0.1",
+    "electron": "^35.5.1",
+    "electron-packager": "^17.1.2",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

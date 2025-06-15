@@ -90,9 +90,8 @@
         </div>
       </mat-card-content>
 
-      <mat-card-actions>
-
-        <button mat-raised-button *ngIf="isEditableSignal()" (click)="deleteCategory(category.id)">
+      <mat-card-actions *ngIf="isEditableSignal()">
+        <button mat-raised-button (click)="deleteCategory(category.id)">
           Delete Category <mat-icon>delete</mat-icon>
         </button>
       </mat-card-actions>

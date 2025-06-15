@@ -24,14 +24,17 @@ const fallbackDefaultSavingsPath = path.join(__dirname, `public/mock-data/mock-s
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    show: false, // don't show until maximized
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     }
   });
+
+  mainWindow.maximize();  // Maximize before showing
+  mainWindow.show();      // Show after maximize
+
 
   mainWindow.loadURL(
     url.format({
@@ -41,7 +44,7 @@ function createWindow() {
     })
   );
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
     mainWindow = null;
