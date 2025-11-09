@@ -14,18 +14,13 @@
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
-    <button mat-button class="edit" (click)="toggleEditable()">
-      {{ editVerbiageComputedSignal() }}
-      <mat-icon>{{ isEditableSignal() ? 'lock_open' : 'lock' }}</mat-icon>
-    </button>
-
   </div>
   <h2> Income for {{currentYearSignal()}}</h2>
   <h3>Savings YTD: {{yearToDateTotalSignal() | currency}} </h3>
   <div class="income-table" *ngFor="let month of monthIncomeSignal(); let i = index">
     <div class="header">
       <h3 class="category-header">{{getMonthNameSignal()[i].name}}</h3>
-      <button mat-button class="add-row" (click)="addRow(month.id)" *ngIf="isEditableSignal()">
+      <button mat-button class="add-row" (click)="addRow(month.id)">
         Add Row
         <mat-icon>add</mat-icon>
       </button>
@@ -52,7 +47,7 @@
               <mat-form-field class="cell-amount">
                 <input matInput [(ngModel)]="row.amount" (change)="updateTotalAmount(row.amount, month.id, rowIndex)">
               </mat-form-field>
-              <button mat-button class="delete-row" (click)="deleteRow(month.id, rowIndex)" *ngIf="isEditableSignal()">
+              <button mat-button class="delete-row" (click)="deleteRow(month.id, rowIndex)">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
