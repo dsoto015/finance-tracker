@@ -1,48 +1,68 @@
 <div class="settings">
-    <h2 class="category-header"> Default Settings</h2>
-    <div class="categories" *ngFor="let category of defaultCategories; let i = index">
-        <h3 class="category-header">{{ category.name }}</h3>
+    <h2 class="category-header">Default Settings</h2>
+    <p>Default values for a new brand new month</p>
+    <div class="categories" *ngFor="let category of defaultCategories">
+        <div class="category-bar">
+            <h3 class="category-subheader">{{ category.name }}</h3>
 
-        <table mat-table [dataSource]="category.rows">
+            <div class="remove-category">
+                <button mat-stroked-button color="primary" (click)="deleteCategory(category.id)">
+                    <mat-icon>delete</mat-icon>
+                    Remove Category
+                </button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table mat-table [dataSource]="category.rows" class="mat-elevation-z1">
 
-            <!-- Define columns -->
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-                <td mat-footer-cell *matFooterCellDef>
-                    <button mat-button (click)="addRow(category)">+ Add Row</button>
-                </td>
-            </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let row">
+                        <div class="input-with-icon">
+                            <button mat-icon-button color="warn" (click)="removeRow(category, row.id)"
+                                aria-label="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
 
-            <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef> Value </th>
+                            <mat-form-field appearance="outline" class="form-field full-width">
+                                <input matInput [(ngModel)]="row.name" placeholder="e.g., Netflix">
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef class="add-row-cell">
+                        <button mat-button color="primary" (click)="addRow(category)">+ Add Row</button>
+                    </td>
+                </ng-container>
 
-                <td mat-cell *matCellDef="let row">
-                    <mat-form-field class="cell-source">
-                        <input matInput [(ngModel)]="row.value" [disabled]="!isRecurring(row)">
-                    </mat-form-field>
-                </td>
+                <!-- Value Column -->
+                <ng-container matColumnDef="value">
+                    <th mat-header-cell *matHeaderCellDef> Value </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-form-field appearance="outline" class="form-field full-width">
+                            <input matInput [(ngModel)]="row.value" placeholder="$0.00">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
 
-            </ng-container>
+                <!-- recurring Column -->
+                <ng-container matColumnDef="recurring">
+                    <th mat-header-cell *matHeaderCellDef> Bill </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox [(ngModel)]="row.recurring" (ngModelChange)="onCheckChanged(row, $event)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="recurring">
-                <th mat-header-cell *matHeaderCellDef> Recurring Charge </th>
-                <td mat-cell *matCellDef="let row">
-                    <mat-checkbox [(ngModel)]="row.recurring" (ngModelChange)="onCheckChanged(row, $event)">
-                    </mat-checkbox>
-                </td>
-
-            </ng-container>
-
-            <!-- Header and Row Definitions -->
-            <tr mat-header-row *matHeaderRowDef="['name', 'value', 'recurring']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['name', 'value', 'recurring']"></tr>
-            <tr mat-footer-row *matFooterRowDef="['name',] sticky: true"></tr>
-        </table>
+                <tr mat-header-row *matHeaderRowDef="['name', 'value', 'recurring']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['name', 'value', 'recurring']"></tr>
+                <tr mat-footer-row *matFooterRowDef="['name']"></tr>
+            </table>
+        </div>
     </div>
 
     <div class="bottom-buttons">
-        <button mat-button (click)="onCancelClick()">No Thanks</button>
-        <button mat-raised-button color="primary" (click)="onSubmitClick()" cdkFocusInitial>Submit</button>
+        <button mat-stroked-button (click)="onCancelClick()">No Thanks</button>
+        <button mat-raised-button color="primary" (click)="onSubmitClick()">Submit</button>
     </div>
 </div>

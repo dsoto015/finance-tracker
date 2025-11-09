@@ -11,7 +11,6 @@ import { YearIncome, MonthIncome } from '../../../core/models/income.model';
 export class IncomeComponent {
 
   date = signal(new Date()); 
-  isEditableSignal = signal(false);
 
   private readonly incomeService = inject(IncomeService);
 
@@ -48,12 +47,6 @@ export class IncomeComponent {
     this.monthTotalSignal().reduce((sum, x) => sum +  +x.total, 0)
   );
 
-  editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
-
-  toggleEditable(): void {
-    this.isEditableSignal.update(() => !this.isEditableSignal());
-  }  
-
   chosenYearHandler(normalizedYear: Date, datepicker: any): void {
     const newDate = new Date(normalizedYear.getFullYear(), 0, 1);
     this.date.update(() => newDate);
@@ -85,10 +78,9 @@ export class IncomeComponent {
   
   addRow(monthId: string) {
     this.incomeService.addRow(this.currentYearSignal(), monthId);
-    this.isEditableSignal.update(() => false)
   }
 
   deleteRow(monthId: string, rowIndex: number) {
     this.incomeService.removeRow(this.currentYearSignal(), monthId, rowIndex);
-    this.isEditableSignal.update(() => false)  }
+  }
 }

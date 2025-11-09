@@ -107,7 +107,7 @@ export class SummaryComponent {
     return this.aggregateMonthly(expenses, e => e.month, e => e.categories.reduce((sum, cat) => sum + (cat.total || 0), 0));
   });
 
-  readonly monthlyExpensesNoRecurringSignal = computed(() => {
+  readonly monthlyExpensesNorecurringSignal = computed(() => {
     const year = this.currentYearSignal();
     const expenses = this.expensesSignal().filter(e => e.year === year);
     return this.aggregateMonthly(expenses, e => e.month, e => {
@@ -128,8 +128,8 @@ export class SummaryComponent {
     labels: this.months,
     datasets: [
       { data: this.monthlyIncomeTotalsSignal(), label: 'Income', backgroundColor: '#42A5F5' },
-      { data: this.monthlyExpensesTotalsSignal(), label: 'Expenses (with recurring)', backgroundColor: '#EF5350' },
-      { data: this.monthlyExpensesNoRecurringSignal(), label: 'Expenses (no recurring)', backgroundColor: '#FFA726' }
+      { data: this.monthlyExpensesTotalsSignal(), label: 'Expenses (with bills)', backgroundColor: '#EF5350' },
+      { data: this.monthlyExpensesNorecurringSignal(), label: 'Expenses (no bills)', backgroundColor: '#FFA726' }
     ]
   }));
 

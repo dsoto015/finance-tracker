@@ -116,7 +116,7 @@ ipcMain.handle('save-defaults', async (_, data) => {
     fs.writeFileSync(defaultsPath, JSON.stringify(data, null, 2));
     return { success: true };
   } catch (error) {
-    console.error('Error saving expenses:', error);
+    console.error('Error saving defaults:', error);
     return { success: false, error };
   }
 });

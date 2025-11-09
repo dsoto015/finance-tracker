@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { ElectronService } from './electron-service';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,8 @@ import { Savings } from '../models/savings.model';
 
 @Injectable({ providedIn: 'root' })
 export class DefaultTemplateService {
+  private _defaults = signal<CategoryBlock[]>([]);
+  readonly defaults = computed(() => this._defaults());
 
   constructor(private electron: ElectronService, private http: HttpClient) {
   }
@@ -17,7 +19,10 @@ export class DefaultTemplateService {
     let data: CategoryBlock[];
     if (isElectron) {
         data = await window.electron.loadDefaults() ?? [];        
-    } else {
+    } else if (this._defaults().length){
+      console.log("loading data from the signal");
+        data = this.defaults();
+    }else {
       console.log('[ng serve] Loading mock expenses');
       try {
         const result = await this.http
@@ -43,6 +48,7 @@ export class DefaultTemplateService {
       note: null
     }));
     console.log("service returned: ", data);
+    this._defaults.set(data);
     return data;
   }
 
@@ -88,15 +94,15 @@ export class DefaultTemplateService {
     return data;
   }
 
-  saveDefaults(template: CategoryBlock[]): void {
-    const stripped = template.map(cat => ({
-      name: cat.name,
-      rows: cat.rows.map(row => ({
-        name: row.name,
-        value: row.value
-      }))
-    }));
-
-    window?.electron?.saveDefaults?.({ categories: stripped });
+  async saveDefaults(data: CategoryBlock[]): Promise<void> {
+    if (window?.electron?.saveDefaults) {
+      const success = await window.electron.saveDefaults(data);
+      console.log("save successful?", success);
+    } else {
+      this._defaults.update(() => data);
+      console.log('save successful', data);
+    }  
+    
+    console.log("new defaults, signal is: ", this.defaults());
   }
 }

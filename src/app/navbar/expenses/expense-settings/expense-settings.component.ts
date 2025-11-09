@@ -26,11 +26,6 @@ export class ExpenseSettingsComponent {
       }
     }
   }
-
-  isRecurring(row: SubcategoryRow): boolean {
-    return this.recurringByRow[row.id]?.() ?? false;
-  }
-
   onCancelClick(): void {
     this.dialogRef.close();
   }
@@ -40,7 +35,8 @@ export class ExpenseSettingsComponent {
   }
 
   onSubmitClick(): void {
-    this.dialogRef.close(this.data.note);
+    this.dialogRef.close();
+    this.defaultTemplateService.saveDefaults(this.defaultCategories);
   }
 
   onCheckChanged(row: SubcategoryRow, isChecked: boolean) {
@@ -50,11 +46,15 @@ export class ExpenseSettingsComponent {
   }
 
   addRow(category: CategoryBlock) {
-
-    console.log("adding row to ", category.name);
     const nextOrder = category.rows.length;
-    category.rows = [...category.rows, { id: uuid(), name: 'New', value: 0, order: nextOrder, recurring: false }];
+    category.rows = [...category.rows, { id: uuid(), name: '', value: 0, order: nextOrder, recurring: false }];
+  }
+  
+  removeRow(category: CategoryBlock, rowId: string) {
+    category.rows = category.rows.filter(row => row.id !== rowId);
   }
 
-
+  deleteCategory(categoryId: string) {
+    this.defaultCategories = this.defaultCategories.filter(x => x.id !== categoryId);
+  }
 }
