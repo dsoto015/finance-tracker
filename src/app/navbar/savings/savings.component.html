@@ -43,7 +43,7 @@
         <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef>Amount</th>
           <td mat-cell *matCellDef="let row; let rowIndex = index">
-            <div clas="amount">
+            <div class="amount">
               <mat-form-field class="cell-amount">
                 <input matInput [(ngModel)]="row.amount" (change)="updateTotalAmount(row.amount, month.id, rowIndex)">
               </mat-form-field>
