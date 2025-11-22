@@ -7,30 +7,41 @@ mat-sidenav {
 
   .toolbar {
     background-color: #DC9AA9;
-
-    .app-name {
-      margin: 0px 0px 0px 10px;
-      font-weight: 500;
-
-    }
-
-    .nav-buttons {
-      margin: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    
+    .left-side {
+      display: flex;
       
-      button.active-link {
-        color: black;
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background-color: #514346;
-          border-radius: 2px;
-          height: 2px;
+      .app-name {
+        display: flex;
+        align-items: center;
+        margin: 0px 0px 0px 10px;
+        font-weight: 500;
+
+      }
+
+      .nav-buttons {
+        margin: 0 10px;
+        
+        button.active-link {
+          color: black;
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #514346;
+            border-radius: 2px;
+            height: 2px;
+          }
         }
       }
-    }
+      
+      .version {
+      }
+  }
   }
 }

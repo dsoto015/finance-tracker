@@ -1,12 +1,17 @@
 <div class="container">
   <mat-toolbar class="toolbar">
-    <h1 class="app-name" routerLink="">$oto Finance Tracker</h1>
-    <span class="spacer"></span>
-    <div class="nav-buttons">
-      <button mat-button routerLink="/income" routerLinkActive="active-link">Income</button>
-      <button mat-button routerLink="/savings" routerLinkActive="active-link">Savings</button>
-      <button mat-button routerLink="/expenses" routerLinkActive="active-link">Expenses</button>
-      <button mat-button routerLink="/summary" routerLinkActive="active-link">Summary</button>
+    <div class="left-side">
+      <h1 class="app-name" routerLink="">$oto Finance Tracker</h1>
+      <span class="spacer"></span>
+      <div class="nav-buttons">
+        <button mat-button routerLink="/income" routerLinkActive="active-link">Income</button>
+        <button mat-button routerLink="/savings" routerLinkActive="active-link">Savings</button>
+        <button mat-button routerLink="/expenses" routerLinkActive="active-link">Expenses</button>
+        <button mat-button routerLink="/summary" routerLinkActive="active-link">Summary</button>
+      </div>
+    </div>
+    <div class="version">
+      <p>v{{version}}</p>
     </div>
   </mat-toolbar>
   <router-outlet></router-outlet>
