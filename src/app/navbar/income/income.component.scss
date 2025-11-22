@@ -38,9 +38,17 @@
                     margin: 10px;
                     width: 50vh;
                 }
+            }
 
-                .amount {
+                .amount-block {
                     display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    
+                    .delete-row {
+                        display: flex;
+                        justify-content: flex-end;
+                    }
                 }
 
                 .cell-amount {
@@ -48,8 +56,6 @@
                     width: 20h;
                 }
 
-                .delete-row {}
-            }
         }
     }
 }
