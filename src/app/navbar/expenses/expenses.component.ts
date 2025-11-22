@@ -28,6 +28,7 @@ export class ExpensesComponent {
   currentMonthName: string = '';
   totalSpent = 10;
   totalSpentWithoutRecurring = 0;
+  changesMade = false;
 
   isEditableSignal = signal(false);
   editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
@@ -89,6 +90,7 @@ export class ExpensesComponent {
     console.log('save value:', amount);
     this.updateForm(this.selectedMonth);
     this.saveChanges();
+    this.changesMade = true;
   }
 
   updateForm(selectedMonth: Date): void {
@@ -236,19 +238,31 @@ export class ExpensesComponent {
   }
 
   nextMonth() {
-    this.saveChanges();
+    if (this.changesMade) 
+    {
+      console.log("a change was made, saving the form!");
+      this.saveChanges();
+    }
+
     const nextMonth = this.selectedMonth.getMonth() + 1;
     const normalizedMonth = new Date(this.selectedMonth.getFullYear(), nextMonth, 1);
     console.log('nextMonth', nextMonth);
     this.loadMonthData(normalizedMonth);
+    this.changesMade = false;
   }
 
   prevMonth() {
-    this.saveChanges();
+    if (this.changesMade) 
+    {
+      console.log("a change was made, saving the form!");
+      this.saveChanges();
+    }
+    
     const previousMonth = this.selectedMonth.getMonth() - 1;
     const normalizedMonth = new Date(this.selectedMonth.getFullYear(), previousMonth, 1);
     console.log('previousMonth', previousMonth);
     this.loadMonthData(normalizedMonth);
+    this.changesMade = false;
   }
 
   openNoteDialog(category: CategoryBlock) {
@@ -289,7 +303,7 @@ export class ExpensesComponent {
   saveChanges(): void {
     console.log('Saving changes..total spent is: ', this.totalSpent);
     this.currentMonthExpense.totalSpent = this.totalSpent;
-    this.expenseService.save(this.monthExpenses);
+    this.expenseService.save([this.currentMonthExpense]);
     this.isEditableSignal.update(() => false);
   }
 
