@@ -12,6 +12,9 @@ mat-sidenav {
     
     .left-side {
       display: flex;
+      .app-logo {
+        height: 150px;
+      }
       
       .app-name {
         display: flex;
@@ -23,7 +26,8 @@ mat-sidenav {
 
       .nav-buttons {
         margin: 0 10px;
-        
+        align-content: center;
+
         button.active-link {
           color: black;
           &::after {
