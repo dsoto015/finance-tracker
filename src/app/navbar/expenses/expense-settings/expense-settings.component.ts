@@ -26,17 +26,9 @@ export class ExpenseSettingsComponent {
       }
     }
   }
-  onCancelClick(): void {
-    this.dialogRef.close();
-  }
 
   isChecked(categoryId: string, rows: SubcategoryRow[]) {
     console.log("checking checked on default categories: ", this.defaultCategories);
-  }
-
-  onSubmitClick(): void {
-    this.dialogRef.close();
-    this.defaultTemplateService.saveDefaults(this.defaultCategories);
   }
 
   onCheckChanged(row: SubcategoryRow, isChecked: boolean) {
@@ -56,5 +48,15 @@ export class ExpenseSettingsComponent {
 
   deleteCategory(categoryId: string) {
     this.defaultCategories = this.defaultCategories.filter(x => x.id !== categoryId);
+  }
+
+  onCancelClick(): void {
+    this.dialogRef.close();
+  }
+
+  onSubmitClick(): void {
+    this.dialogRef.close();
+    this.defaultTemplateService.saveDefaults(this.defaultCategories);
+    console.log("saving defaults", this.defaultCategories);
   }
 }

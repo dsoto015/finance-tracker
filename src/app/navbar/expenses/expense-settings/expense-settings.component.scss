@@ -1,6 +1,6 @@
 .settings {
     margin: 24px;
-
+    
     .categories {
         .category-bar {
             display: flex;
@@ -65,9 +65,13 @@
     }
 
     .bottom-buttons {
+        position: sticky;
+        margin-top: 24px;
+        bottom: 20px;
+        right: 20px;
         display: flex;
         justify-content: flex-end;
-        gap: 12px;
-        margin-top: 24px;
+        gap: 16px;
+        z-index: 1000;
     }
 }
