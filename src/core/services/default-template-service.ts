@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { ElectronService } from './electron-service';
 import { HttpClient } from '@angular/common/http';
@@ -9,9 +9,28 @@ import { Savings } from '../models/savings.model';
 @Injectable({ providedIn: 'root' })
 export class DefaultTemplateService {
   private _defaults = signal<CategoryBlock[]>([]);
-  readonly defaults = computed(() => this._defaults());
+  private isLoaded = false; // Track whether defaults have been loaded
+  categoryDefaults = this.defaults(); 
+
+  get defaults(): Signal<CategoryBlock[]> {
+    if (!this.isLoaded) {
+      console.log('Defaults not loaded, loading now...');
+      this.loadDefaultExpenses(); // Ensure defaults are loaded
+    }
+    return computed(() => this._defaults());
+  }
 
   constructor(private electron: ElectronService, private http: HttpClient) {
+  }
+
+  getDefaultsValue(): CategoryBlock[] {
+    const currentDefaults = this.defaults(); // Access the current value of the signal
+    console.log('Current defaults value:', currentDefaults);
+    return currentDefaults;
+  }
+
+  updateDefaults(newDefaults: CategoryBlock[]): void {
+    this._defaults.set(newDefaults); // Update the internal signal
   }
     
   async loadDefaultExpenses(): Promise<CategoryBlock[]> {
@@ -23,7 +42,7 @@ export class DefaultTemplateService {
       console.log("loading data from the signal");
         data = this.defaults();
     }else {
-      console.log('[ng serve] Loading mock expenses');
+      console.log('[ng serve] Loading mock categories');
       try {
         const result = await this.http
           .get<CategoryBlock[]>('/mock-data/mock-default-categories.json')
@@ -47,8 +66,9 @@ export class DefaultTemplateService {
       })), 
       note: null
     }));
-    console.log("service returned: ", data);
+    console.log("categories service returned: ", data);
     this._defaults.set(data);
+    this.isLoaded = true;
     return data;
   }
 

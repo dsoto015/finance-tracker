@@ -21,7 +21,6 @@ export class ExpensesComponent {
 
   displayedColumns: string[] = ['actions', 'name', 'value'];
   categories: CategoryBlock[] = [];
-  defaultCategories: CategoryBlock[] = [];
   monthExpenses: MonthExpense[] = [];
   currentMonthExpense!: MonthExpense;
   selectedMonth: Date = new Date();
@@ -29,6 +28,8 @@ export class ExpensesComponent {
   totalSpent = 10;
   totalSpentWithoutRecurring = 0;
   changesMade = false;
+
+  defaultCategories = computed(() => this.defaultTemplateService.defaults());
 
   isEditableSignal = signal(false);
   editVerbiageComputedSignal = computed(() => this.isEditableSignal() ? 'Lock Rows' : 'Unlock Rows');
@@ -40,10 +41,10 @@ export class ExpensesComponent {
   constructor(private expenseService: ExpenseService,
               private defaultTemplateService: DefaultTemplateService) {
   }
-  
+
   async ngOnInit(): Promise<void> {
+    await this.defaultTemplateService.loadDefaultExpenses();
     this.monthExpenses = await this.expenseService.loadExpenses() as MonthExpense[];
-    this.defaultCategories = await this.defaultTemplateService.loadDefaultExpenses() as CategoryBlock[]
     this.currentMonthExpense = this.getCurrentMonthExpense();
     this.currentMonthName = this.getMonthName(this.selectedMonth);
     this.updateTotalMonthSpent();
@@ -52,7 +53,8 @@ export class ExpensesComponent {
 
   getCurrentMonthExpense(): MonthExpense {
     const foundMonthExpense = this.monthExpenses.find(x => x.month === this.selectedMonth.getMonth() && x.year == this.selectedMonth.getFullYear());
-    if(foundMonthExpense != undefined) {
+    if(foundMonthExpense != undefined || foundMonthExpense != null) {
+      console.log("month existed in the array, returning what was there")
       return foundMonthExpense;
     }
     const monthData = {
@@ -60,7 +62,7 @@ export class ExpensesComponent {
       month: this.selectedMonth.getMonth(),
       year: this.selectedMonth.getFullYear(),
       totalSpent: 0,
-      categories: this.defaultCategories.map(cat => ({
+      categories: this.defaultCategories().map(cat => ({
         id: cat.id,
         name: cat.name,
         rows: cat.rows.map(row => ({
@@ -74,7 +76,9 @@ export class ExpensesComponent {
         note: null
       }))
     };
+
     this.monthExpenses.push(monthData);
+    console.log("NEW month with NEW data")
     return monthData;
   }
 
@@ -90,7 +94,6 @@ export class ExpensesComponent {
     console.log('save value:', amount);
     this.updateForm(this.selectedMonth);
     this.saveChanges();
-    this.changesMade = true;
   }
 
   updateForm(selectedMonth: Date): void {
@@ -243,7 +246,6 @@ export class ExpensesComponent {
       console.log("a change was made, saving the form!");
       this.saveChanges();
     }
-
     const nextMonth = this.selectedMonth.getMonth() + 1;
     const normalizedMonth = new Date(this.selectedMonth.getFullYear(), nextMonth, 1);
     console.log('nextMonth', nextMonth);
@@ -256,8 +258,7 @@ export class ExpensesComponent {
     {
       console.log("a change was made, saving the form!");
       this.saveChanges();
-    }
-    
+    }    
     const previousMonth = this.selectedMonth.getMonth() - 1;
     const normalizedMonth = new Date(this.selectedMonth.getFullYear(), previousMonth, 1);
     console.log('previousMonth', previousMonth);
@@ -287,8 +288,8 @@ export class ExpensesComponent {
 
   openSettingsDialog() {
     const dialogRef = this.dialog.open(ExpenseSettingsComponent, {
-      height: '750px',
-      width: '600px',
+      height: '95vh',
+      maxWidth: '95vw',
       data: {  }
     });
 
@@ -302,6 +303,7 @@ export class ExpensesComponent {
 
   saveChanges(): void {
     console.log('Saving changes..total spent is: ', this.totalSpent);
+    this.changesMade = true;
     this.currentMonthExpense.totalSpent = this.totalSpent;
     this.expenseService.save([this.currentMonthExpense]);
     this.isEditableSignal.update(() => false);
