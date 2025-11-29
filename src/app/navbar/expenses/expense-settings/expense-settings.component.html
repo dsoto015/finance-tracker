@@ -3,8 +3,7 @@
     <p>Default values for a new brand new month</p>
     <div class="categories" *ngFor="let category of defaultCategories">
         <div class="category-bar">
-            <h3 class="category-subheader">{{ category.name }}</h3>
-
+            <input [(ngModel)]="category.name" class="category-subheader">
             <div class="remove-category">
                 <button mat-stroked-button color="primary" (click)="deleteCategory(category.id)">
                     <mat-icon>delete</mat-icon>
@@ -59,8 +58,14 @@
                 <tr mat-footer-row *matFooterRowDef="['name']"></tr>
             </table>
         </div>
-    </div>
 
+        <div class="add-category">
+            <button mat-stroked-button color="primary" (click)="addCategory()">
+                <mat-icon>add</mat-icon>
+                Add Category
+            </button>
+        </div>
+    </div>
     <div class="bottom-buttons sticky-fabs">
         <button mat-button (click)="onCancelClick()">Cancel</button>
         <button mat-flat-button (click)="onSubmitClick()">Submit</button>

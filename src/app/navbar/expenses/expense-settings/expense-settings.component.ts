@@ -49,6 +49,10 @@ export class ExpenseSettingsComponent {
   deleteCategory(categoryId: string) {
     this.defaultCategories = this.defaultCategories.filter(x => x.id !== categoryId);
   }
+  
+  addCategory() {
+    
+  }
 
   onCancelClick(): void {
     this.dialogRef.close();
